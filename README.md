@@ -50,3 +50,23 @@ Example rows (DOJI ring 24K Hanoi):
 - Times are stored as UTC; local date calculations use `Asia/Ho_Chi_Minh`.
 
 
+## Sprint 2 - .NET API Base
+
+Quickstart:
+
+```bash
+dotnet restore
+dotnet build -c Release
+dotnet test -c Release --no-build
+# run locally
+dotnet run --project src/GoldTracker.Api --urls http://localhost:5080
+```
+
+Endpoints (stubbed):
+- GET /api/prices/latest
+- GET /api/prices/history
+- GET /api/prices/changes
+- GET /api/sources/health
+- GET /healthz, /readyz
+
+

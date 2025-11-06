@@ -49,6 +49,17 @@ services:
       - ./db/tests:/tests:ro
     command: ["sh", "-c", "pg_prove -h postgres -d gold -U gold -p 5432 /tests/*.sql"]
 
+  api:
+    build:
+      context: ./src/GoldTracker.Api
+    image: gold-tracker-api:dev
+    container_name: gold-tracker-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - "5080:8080"
+    depends_on: []
+
 volumes:
   pgdata:
 

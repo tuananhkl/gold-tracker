@@ -1,0 +1,134 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/derrick/gold-tracker/src/GoldTracker.Application/GoldTracker.Application.csproj": {}
+  },
+  "projects": {
+    "/home/derrick/gold-tracker/src/GoldTracker.Application/GoldTracker.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/derrick/gold-tracker/src/GoldTracker.Application/GoldTracker.Application.csproj",
+        "projectName": "GoldTracker.Application",
+        "projectPath": "/home/derrick/gold-tracker/src/GoldTracker.Application/GoldTracker.Application.csproj",
+        "packagesPath": "/home/derrick/.nuget/packages/",
+        "outputPath": "/home/derrick/gold-tracker/src/GoldTracker.Application/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/derrick/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "/usr/lib64/dotnet/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/home/derrick/gold-tracker/src/GoldTracker.Domain/GoldTracker.Domain.csproj": {
+                "projectPath": "/home/derrick/gold-tracker/src/GoldTracker.Domain/GoldTracker.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true,
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/9.0.109/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/derrick/gold-tracker/src/GoldTracker.Domain/GoldTracker.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/derrick/gold-tracker/src/GoldTracker.Domain/GoldTracker.Domain.csproj",
+        "projectName": "GoldTracker.Domain",
+        "projectPath": "/home/derrick/gold-tracker/src/GoldTracker.Domain/GoldTracker.Domain.csproj",
+        "packagesPath": "/home/derrick/.nuget/packages/",
+        "outputPath": "/home/derrick/gold-tracker/src/GoldTracker.Domain/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/derrick/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "/usr/lib64/dotnet/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true,
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/9.0.109/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
