@@ -1,0 +1,23 @@
+# General
+.DS_Store
+node_modules/
+dist/
+build/
+*.log
+
+# Python
+__pycache__/
+*.pyc
+
+# Docker
+.env
+.venv/
+.idea/
+.vscode/
+*.iml
+
+# Local data
+pgdata/
+db-data/
+
+

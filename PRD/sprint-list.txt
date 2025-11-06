@@ -1,0 +1,39 @@
+1. DB Schema & Migrations (PostgreSQL) + Unit Tests
+
+2. Base Code Structure (.NET 8 API + Solution Layout) + CI Test
+
+3. Price Normalization Model & Repositories + Tests
+
+4. Scraper Adapter #1 — DOJI (10-min schedule & daily snapshot) + Tests
+
+5. Public API v1 — /prices/latest, /prices/history, /prices/changes + Contract Tests
+
+6. Kubernetes Dev Deploy — API + DB (StatefulSet/PVC) + CronJobs (Scrape/Snapshot)
+
+7. Frontend Widget — Ring Gold “Top Card” (↑/↓ vs hôm qua) + API wiring
+
+8. Frontend Charts — 7/30/90/180 ngày + Time-range picker
+
+9. Scraper Adapter #2 — BTMC + Health/Retry/Anomaly Filter
+
+10. Scraper Adapter #3 — SJC + Location/Brand Mapping
+
+11. Scraper Adapter #4 — Phúc Thành + Source Comparator
+
+12. Alerts Engine — Threshold/Daily Brief + Telegram Bot (Commands /ring, /bar, /chart)
+
+13. Ops & Observability — Prom/Grafana Dashboards, EFK Logging, Job Success SLO
+
+14. Data Quality & Retention — Outlier Rejection, Daily Close Snapshot, 24-month Retain
+
+15. Caching & Performance — Read Path Optimization (e.g., Timescale/Indexes)
+
+16. Security & Secrets — K8s RBAC, NetworkPolicy, AKV CSI Driver
+
+17. Backup & Restore — Nightly pg_dump, Retention 90 days + Restore Runbook
+
+18. UAT Hardening — Load Test, HPA Tune, Error Budgets + Release Gates
+
+19. LLM Phase — Local Qwen3-8B Integration + Prompt Templates & Guardrails
+
+20. Production Cutover — Runbook, On-call, Cost & Scaling Review

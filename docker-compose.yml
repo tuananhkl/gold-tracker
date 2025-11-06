@@ -1,0 +1,54 @@
+version: '3.9'
+
+services:
+  postgres:
+    build:
+      context: ./docker/postgres
+    image: gold-tracker-postgres:16
+    container_name: gold-tracker-postgres
+    environment:
+      POSTGRES_USER: gold
+      POSTGRES_PASSWORD: gold
+      POSTGRES_DB: gold
+      TZ: UTC
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gold -d gold"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  flyway:
+    image: flyway/flyway:10
+    container_name: gold-tracker-flyway
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./db/flyway/sql:/flyway/sql:ro
+    command: -url=jdbc:postgresql://postgres:5432/gold -user=gold -password=gold -locations=filesystem:/flyway/sql -defaultSchema=gold -schemas=gold,public -baselineOnMigrate=true -connectRetries=20 migrate
+
+  pgtap-runner:
+    build:
+      context: ./docker/pgtap-runner
+    image: gold-tracker-pgtap-runner:latest
+    container_name: gold-tracker-pgtap-runner
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PGHOST: postgres
+      PGPORT: 5432
+      PGUSER: gold
+      PGPASSWORD: gold
+      PGDATABASE: gold
+    volumes:
+      - ./db/tests:/tests:ro
+    command: ["sh", "-c", "pg_prove -h postgres -d gold -U gold -p 5432 /tests/*.sql"]
+
+volumes:
+  pgdata:
+
