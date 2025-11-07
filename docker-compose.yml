@@ -70,12 +70,16 @@ services:
     image: gold-tracker-api:dev
     container_name: gold-tracker-api
     depends_on:
+      postgres:
+        condition: service_healthy
       flyway:
         condition: service_completed_successfully
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: Docker
       ASPNETCORE_URLS: http://+:8080
-      # use DB from compose; Program.cs should read POSTGRES_CONN
+      # Connection string for Docker - use service name 'postgres'
+      ConnectionStrings__Postgres: Host=postgres;Port=5432;Username=gold;Password=gold;Database=gold
+      # Alternative: can also use POSTGRES_CONN env var
       POSTGRES_CONN: Host=postgres;Port=5432;Username=gold;Password=gold;Database=gold
       SCRAPER_ENABLED: "false"
       SNAPSHOT_ENABLED: "false"

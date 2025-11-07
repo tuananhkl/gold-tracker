@@ -7,6 +7,13 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add Docker-specific configuration if running in Docker
+var env = builder.Environment.EnvironmentName;
+if (env == "Docker" || Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true")
+{
+  builder.Configuration.AddJsonFile("appsettings.Docker.json", optional: true, reloadOnChange: true);
+}
+
 builder.Host.UseSerilog((ctx, lc) => lc
   .ReadFrom.Configuration(ctx.Configuration)
   .WriteTo.Console());
@@ -36,9 +43,10 @@ app.MapGet("/readyz", async () =>
 {
   try
   {
-    // Try to connect to DB
-    var connString = builder.Configuration.GetConnectionString("Postgres")
-      ?? Environment.GetEnvironmentVariable("POSTGRES_CONN")
+    // Try to connect to DB using same logic as DI
+    var connString = Environment.GetEnvironmentVariable("POSTGRES_CONN")
+      ?? app.Configuration.GetConnectionString("Postgres")
+      ?? app.Configuration.GetSection("ConnectionStrings:Postgres").Value
       ?? "Host=localhost;Port=5432;Username=gold;Password=gold;Database=gold";
     using var conn = new Npgsql.NpgsqlConnection(connString);
     await conn.OpenAsync();

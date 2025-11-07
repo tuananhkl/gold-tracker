@@ -23,11 +23,16 @@ public static class ServiceCollectionExtensions
     services.AddOptions<SourceOptions>().Bind(configuration.GetSection(SourceOptions.SectionName));
     services.AddOptions<ScheduleOptions>().Bind(configuration.GetSection(ScheduleOptions.SectionName));
     services.AddOptions<DojiOptions>().Bind(configuration.GetSection(DojiOptions.SectionName));
-
-    // Database connection
-    var connString = configuration.GetConnectionString("Postgres")
-      ?? Environment.GetEnvironmentVariable("POSTGRES_CONN")
+    
+    // Database connection - use IOptions pattern
+    services.AddOptions<DbOptions>().Bind(configuration.GetSection(DbOptions.SectionName));
+    
+    // Get connection string with priority: env var > config > default
+    var connString = Environment.GetEnvironmentVariable("POSTGRES_CONN")
+      ?? configuration.GetConnectionString("Postgres")
+      ?? configuration.GetSection($"{DbOptions.SectionName}:Postgres").Value
       ?? "Host=localhost;Port=5432;Username=gold;Password=gold;Database=gold";
+    
     services.AddSingleton(new DapperConnectionFactory(connString));
 
     // Repositories
