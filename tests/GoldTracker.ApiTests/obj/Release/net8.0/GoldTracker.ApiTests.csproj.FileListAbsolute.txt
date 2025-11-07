@@ -450,3 +450,4 @@
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/Polly.dll
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/Polly.Extensions.Http.dll
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/appsettings.Docker.json
+/home/derrick/gold-tracker/tests/GoldTracker.ApiTests/obj/Release/net8.0/GoldTracker.ApiTests.sourcelink.json

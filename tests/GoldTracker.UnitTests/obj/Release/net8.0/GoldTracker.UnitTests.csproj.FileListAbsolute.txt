@@ -130,3 +130,4 @@
 /home/derrick/gold-tracker/tests/GoldTracker.UnitTests/bin/Release/net8.0/System.Diagnostics.DiagnosticSource.dll
 /home/derrick/gold-tracker/tests/GoldTracker.UnitTests/bin/Release/net8.0/GoldTracker.Infrastructure.dll
 /home/derrick/gold-tracker/tests/GoldTracker.UnitTests/bin/Release/net8.0/GoldTracker.Infrastructure.pdb
+/home/derrick/gold-tracker/tests/GoldTracker.UnitTests/obj/Release/net8.0/GoldTracker.UnitTests.sourcelink.json

@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: flyway-migrate
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: flyway
+          image: gold-tracker-flyway:dev
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef: { name: postgres-secret }
+          command:
+            - flyway
+          args:
+            - -url=jdbc:postgresql://postgres:5432/$(POSTGRES_DB)
+            - -user=$(POSTGRES_USER)
+            - -password=$(POSTGRES_PASSWORD)
+            - -locations=filesystem:/flyway/sql
+            - -defaultSchema=gold
+            - -schemas=gold,public
+            - -baselineOnMigrate=true
+            - -connectRetries=30
+            - migrate
+      initContainers:
+        - name: wait-pg
+          image: postgres:16
+          command: ["sh","-c","until pg_isready -h postgres -p 5432 -U gold -d gold; do echo waiting for pg; sleep 2; done"]
+

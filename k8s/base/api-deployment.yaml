@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gold-tracker-api
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: gold-api } }
+  template:
+    metadata:
+      labels: { app: gold-api }
+    spec:
+      containers:
+        - name: api
+          image: gold-tracker-api:dev
+          imagePullPolicy: IfNotPresent
+          ports: [{ containerPort: 8080, name: http }]
+          env:
+            - name: ASPNETCORE_URLS
+              value: "http://+:8080"
+            - name: ConnectionStrings__Postgres
+              value: "Host=postgres;Port=5432;Database=gold;Username=gold;Password=gold"
+            - name: POSTGRES_CONN
+              value: "Host=postgres;Port=5432;Database=gold;Username=gold;Password=gold"
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Docker"
+            - name: SCRAPER_ENABLED
+              value: "false"
+            - name: SNAPSHOT_ENABLED
+              value: "false"
+          envFrom:
+            - configMapRef: { name: gold-app-config }
+          readinessProbe:
+            httpGet: { path: /healthz, port: http }
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: { path: /healthz, port: http }
+            initialDelaySeconds: 15
+            periodSeconds: 10
+

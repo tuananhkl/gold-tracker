@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+spec:
+  serviceName: postgres
+  replicas: 1
+  selector:
+    matchLabels: { app: postgres }
+  template:
+    metadata: { labels: { app: postgres } }
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16
+          imagePullPolicy: IfNotPresent
+          ports: [{ containerPort: 5432, name: pgsql }]
+          envFrom:
+            - secretRef: { name: postgres-secret }
+          env:
+            - name: TZ
+              value: "Asia/Ho_Chi_Minh"
+          readinessProbe:
+            exec: { command: ["pg_isready","-U","gold","-d","gold"] }
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket: { port: 5432 }
+            periodSeconds: 10
+          volumeMounts:
+            - name: pgdata
+              mountPath: /var/lib/postgresql/data
+      terminationGracePeriodSeconds: 30
+  volumeClaimTemplates:
+    - metadata: { name: pgdata }
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources: { requests: { storage: 5Gi } }
+

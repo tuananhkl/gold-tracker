@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+spec:
+  volumeClaimTemplates:
+    - metadata: { name: pgdata }
+      spec:
+        resources: { requests: { storage: 1Gi } }  # smaller for dev
+
