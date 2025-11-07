@@ -29,8 +29,19 @@ services:
         condition: service_healthy
     volumes:
       - ./db/flyway/sql:/flyway/sql:ro
-    command: -url=jdbc:postgresql://postgres:5432/gold -user=gold -password=gold -locations=filesystem:/flyway/sql -defaultSchema=gold -schemas=gold,public -baselineOnMigrate=true -connectRetries=20 migrate
+    # Run all sprint-1 migrations into schema gold + public, retry until pg is ready
+    command: >
+      -url=jdbc:postgresql://postgres:5432/gold
+      -user=gold
+      -password=gold
+      -locations=filesystem:/flyway/sql
+      -defaultSchema=gold
+      -schemas=gold,public
+      -baselineOnMigrate=true
+      -connectRetries=20
+      migrate
 
+  # One-shot test runner for pgTAP (optional but runnable via compose run)
   pgtap-runner:
     build:
       context: ./docker/pgtap-runner
@@ -39,6 +50,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      flyway:
+        condition: service_completed_successfully
     environment:
       PGHOST: postgres
       PGPORT: 5432
@@ -47,7 +60,8 @@ services:
       PGDATABASE: gold
     volumes:
       - ./db/tests:/tests:ro
-    command: ["sh", "-c", "pg_prove -h postgres -d gold -U gold -p 5432 /tests/*.sql"]
+    entrypoint: ["/bin/sh","-c"]
+    command: 'cd /tests && pg_prove -h postgres -d gold -U gold -p 5432 *.sql'
 
   api:
     build:
@@ -55,15 +69,21 @@ services:
       dockerfile: src/GoldTracker.Api/Dockerfile
     image: gold-tracker-api:dev
     container_name: gold-tracker-api
+    depends_on:
+      flyway:
+        condition: service_completed_successfully
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:8080
+      # use DB from compose; Program.cs should read POSTGRES_CONN
+      POSTGRES_CONN: Host=postgres;Port=5432;Username=gold;Password=gold;Database=gold
     ports:
       - "8080:8080"
-    # Uncomment later when wiring DB:
-    # depends_on:
-    #   - postgres
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/healthz"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
 
 volumes:
   pgdata:
-
