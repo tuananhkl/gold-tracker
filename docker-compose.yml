@@ -51,14 +51,18 @@ services:
 
   api:
     build:
-      context: ./src/GoldTracker.Api
+      context: .
+      dockerfile: src/GoldTracker.Api/Dockerfile
     image: gold-tracker-api:dev
     container_name: gold-tracker-api
     environment:
       ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
     ports:
-      - "5080:8080"
-    depends_on: []
+      - "8080:8080"
+    # Uncomment later when wiring DB:
+    # depends_on:
+    #   - postgres
 
 volumes:
   pgdata:
