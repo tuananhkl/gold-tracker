@@ -8,4 +8,5 @@ patches:
   - path: patch-postgres-storage.yaml
 # uncomment if you have nginx ingress controller installed locally
 #  - path: ingress.yaml
+  - path: patch-service-nodeport.yaml
 

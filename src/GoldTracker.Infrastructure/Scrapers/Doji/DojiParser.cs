@@ -92,6 +92,57 @@ public sealed class DojiParser
       }
     }
 
+    // Regex fallback: scan raw HTML text for common patterns
+    if (records.Count == 0)
+    {
+      var text = html.Replace("\n", " ").Replace("\r", " ");
+      var now2 = DateTimeOffset.UtcNow;
+
+      // Pattern targets: label (nhẫn/vàng miếng) + optional karat + region + two prices
+      var patterns = new[]
+      {
+        // e.g. "Nhẫn tròn trơn 24K ... Hà Nội ... 7,420,000 ... 7,520,000"
+        @"(nhẫn[^<]*?)(hà\s*nội|hanoi|hồ\s*chí\s*minh|ho\s*chi\s*minh|hcmc|hcm)[^\d]{0,40}([\d\.,]{5,})[^\d]{0,20}([\d\.,]{5,})",
+        // e.g. "Vàng miếng 9999 ... HCMC ... 7.5xx.000 ... 7.6xx.000"
+        @"(vàng\s*miếng[^<]*?)(hà\s*nội|hanoi|hồ\s*chí\s*minh|ho\s*chi\s*minh|hcmc|hcm)[^\d]{0,40}([\d\.,]{5,})[^\d]{0,20}([\d\.,]{5,})"
+      };
+
+      foreach (var pat in patterns)
+      {
+        var rx = System.Text.RegularExpressions.Regex.Matches(text, pat, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        foreach (System.Text.RegularExpressions.Match m in rx)
+        {
+          if (!m.Success || m.Groups.Count < 5) continue;
+          var formRaw = m.Groups[1].Value;
+          var regionRaw = m.Groups[2].Value;
+          var buyRaw = m.Groups[3].Value;
+          var sellRaw = m.Groups[4].Value;
+
+          var form = NormalizeForm(formRaw);
+          if (form is null) continue;
+          var karat = NormalizeKarat(formRaw);
+          var region = NormalizeRegion(regionRaw);
+          var priceBuy = ParsePrice(buyRaw);
+          var priceSell = ParsePrice(sellRaw);
+          if (priceBuy <= 0 || priceSell <= 0) continue;
+
+          records.Add(new RawPriceRecord
+          {
+            SourceName = sourceName,
+            Brand = "DOJI",
+            Form = form,
+            Karat = karat,
+            Region = region,
+            PriceBuy = priceBuy,
+            PriceSell = priceSell,
+            Currency = "VND",
+            CollectedAt = now2,
+            EffectiveAt = now2
+          });
+        }
+      }
+    }
+
     return records;
   }
 

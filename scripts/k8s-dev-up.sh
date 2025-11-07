@@ -30,10 +30,15 @@ kubectl -n ${NS} wait --for=condition=Complete --timeout=420s job/flyway-migrate
 echo "⏳ Waiting for API deployment"
 kubectl -n ${NS} rollout status deployment/gold-tracker-api --timeout=240s
 
-echo "🔌 Port-forward API 8080"
+echo "🔌 Port-forward API 8080 (listening on 0.0.0.0)"
 # Kill previous port-forward if any
 pkill -f "kubectl.*port-forward.*gold-tracker-api.*8080:8080" 2>/dev/null || true
-kubectl -n ${NS} port-forward deploy/gold-tracker-api 8080:8080 >/tmp/gold_pf.log 2>&1 &
+
+PORT_FWD_CMD="kubectl -n ${NS} port-forward --address 0.0.0.0 svc/gold-tracker-api 8080:8080"
+nohup bash -c "$PORT_FWD_CMD" >/tmp/gold_pf.log 2>&1 &
+PF_PID=$!
+disown ${PF_PID} 2>/dev/null || true
+sleep 2
 for i in {1..30}; do
   if curl -sf http://localhost:8080/healthz >/dev/null 2>&1; then
     echo "✅ API healthy"
