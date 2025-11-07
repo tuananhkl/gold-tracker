@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Xml.Linq;
 using AngleSharp;
 using AngleSharp.Dom;
 using GoldTracker.Domain.Normalization;
@@ -141,6 +142,52 @@ public sealed class DojiParser
           });
         }
       }
+    }
+
+    return records;
+  }
+
+  public IReadOnlyList<RawPriceRecord> ParseXml(string xml, string sourceName = "DOJI")
+  {
+    var records = new List<RawPriceRecord>();
+
+    try
+    {
+      var doc = XDocument.Parse(xml);
+      var rows = doc.Descendants("Row")
+        .Where(r => string.Equals((string?)r.Attribute("Key"), "nhanhung1chi", StringComparison.OrdinalIgnoreCase));
+
+      var now = DateTimeOffset.UtcNow;
+
+      foreach (var row in rows)
+      {
+        var buyText = (string?)row.Attribute("Buy") ?? string.Empty;
+        var sellText = (string?)row.Attribute("Sell") ?? string.Empty;
+
+        var priceBuy = ParsePrice(buyText) * 1000m;
+        var priceSell = ParsePrice(sellText) * 1000m;
+
+        if (priceBuy <= 0 || priceSell <= 0)
+          continue;
+
+        records.Add(new RawPriceRecord
+        {
+          SourceName = sourceName,
+          Brand = "DOJI",
+          Form = "ring",
+          Karat = "24",
+          Region = "Hanoi",
+          PriceBuy = priceBuy,
+          PriceSell = priceSell,
+          Currency = "VND",
+          CollectedAt = now,
+          EffectiveAt = now
+        });
+      }
+    }
+    catch
+    {
+      // ignored - fallback to HTML/regex parsers
     }
 
     return records;

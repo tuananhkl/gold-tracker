@@ -7,4 +7,6 @@ data:
   SCHEDULE_WINDOW_START: "07:30"
   SCHEDULE_WINDOW_END: "21:00"
   SNAPSHOT_AT: "21:05"
+  Doji__BaseUrl: "https://giavang.doji.vn"
+  Doji__PriceEndpoint: "/api/giavang/?api_key=258fbd2a72ce8481089d88c678e9fe4f"
 

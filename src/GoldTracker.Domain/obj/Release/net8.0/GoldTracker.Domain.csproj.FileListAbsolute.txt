@@ -1,0 +1,12 @@
+/home/derrick/gold-tracker/src/GoldTracker.Domain/obj/Release/net8.0/GoldTracker.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/home/derrick/gold-tracker/src/GoldTracker.Domain/obj/Release/net8.0/GoldTracker.Domain.AssemblyInfoInputs.cache
+/home/derrick/gold-tracker/src/GoldTracker.Domain/obj/Release/net8.0/GoldTracker.Domain.AssemblyInfo.cs
+/home/derrick/gold-tracker/src/GoldTracker.Domain/obj/Release/net8.0/GoldTracker.Domain.csproj.CoreCompileInputs.cache
+/home/derrick/gold-tracker/src/GoldTracker.Domain/bin/Release/net8.0/GoldTracker.Domain.deps.json
+/home/derrick/gold-tracker/src/GoldTracker.Domain/bin/Release/net8.0/GoldTracker.Domain.dll
+/home/derrick/gold-tracker/src/GoldTracker.Domain/bin/Release/net8.0/GoldTracker.Domain.pdb
+/home/derrick/gold-tracker/src/GoldTracker.Domain/obj/Release/net8.0/GoldTracker.Domain.dll
+/home/derrick/gold-tracker/src/GoldTracker.Domain/obj/Release/net8.0/refint/GoldTracker.Domain.dll
+/home/derrick/gold-tracker/src/GoldTracker.Domain/obj/Release/net8.0/GoldTracker.Domain.pdb
+/home/derrick/gold-tracker/src/GoldTracker.Domain/obj/Release/net8.0/ref/GoldTracker.Domain.dll
+/home/derrick/gold-tracker/src/GoldTracker.Domain/obj/Release/net8.0/GoldTracker.Domain.sourcelink.json

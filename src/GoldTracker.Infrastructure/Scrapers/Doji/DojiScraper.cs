@@ -60,8 +60,10 @@ public sealed class DojiScraper : IDojiScraper
       if (response == null)
         throw new HttpRequestException("Failed to fetch DOJI prices after 3 attempts");
       
-      // Try HTML first, then JSON
-      var records = _parser.ParseHtml(response, "DOJI");
+      // Try XML (official API) first, then HTML/JSON fallbacks
+      var records = _parser.ParseXml(response, "DOJI");
+      if (records.Count == 0)
+        records = _parser.ParseHtml(response, "DOJI");
       if (records.Count == 0)
         records = _parser.ParseJson(response, "DOJI");
 

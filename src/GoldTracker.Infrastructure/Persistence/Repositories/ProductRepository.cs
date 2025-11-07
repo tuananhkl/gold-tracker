@@ -25,7 +25,7 @@ public sealed class ProductRepository : IProductRepository
         WHERE brand = @brand AND form = @form::text
           AND COALESCE(karat, -1) = COALESCE(@karat, -1)
           AND COALESCE(region, '') = COALESCE(@region, '')",
-      new { brand, form = form.ToString(), karat, region });
+      new { brand, form = form.ToString().ToLowerInvariant(), karat, region });
     return result;
   }
 
@@ -43,7 +43,7 @@ public sealed class ProductRepository : IProductRepository
         VALUES (@id, @brand, @form::text, @karat, @region, true)
         ON CONFLICT DO NOTHING
         RETURNING id, brand, form, karat, region, sku_hint as SkuHint, active",
-      new { id, brand, form = form.ToString(), karat, region });
+      new { id, brand, form = form.ToString().ToLowerInvariant(), karat, region });
 
     if (result is not null)
       return result;

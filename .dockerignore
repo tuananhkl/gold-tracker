@@ -11,4 +11,8 @@ docker/
 *.suo
 .vscode/
 .idea/
+**/bin/
+**/obj/
+*.dll
+*.pdb
 
