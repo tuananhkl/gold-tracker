@@ -1,0 +1,250 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="c9aabac1-31c8-49a0-878c-116a38bdaa8f" name="@testcursor 2025-11-07 11:09:23" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2025-11-07T11:09:23.8761646+07:00" queuing="2025-11-07T11:09:23.8761647+07:00" start="2025-11-07T11:09:21.8630867+07:00" finish="2025-11-07T11:09:28.3035754+07:00" />
+  <TestSettings name="default" id="e26f0b07-a96d-48ee-8243-550d4c9626cb">
+    <Deployment runDeploymentRoot="_testcursor_2025-11-07_11_09_23" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="dd8315fe-93fd-45b8-8a97-97c7c37ef257" testId="afec2ddc-f871-f8b6-ab26-f2fd770a5a08" testName="GoldTracker.IntegrationTests.RepositoryTests.Insert_and_dedup_should_respect_unique_constraint" computerName="testcursor" duration="00:00:00.0010000" startTime="2025-11-07T11:09:27.9720615+07:00" endTime="2025-11-07T11:09:27.9720616+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="dd8315fe-93fd-45b8-8a97-97c7c37ef257">
+      <Output>
+        <ErrorInfo>
+          <Message>Npgsql.PostgresException : 0A000: extension "pgtap" is not available
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.</Message>
+          <StackTrace>   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource&lt;TResult&gt;.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteNonQuery(Boolean async, CancellationToken cancellationToken)
+   at Dapper.SqlMapper.ExecuteImplAsync(IDbConnection cnn, CommandDefinition command, Object param) in /_/Dapper/SqlMapper.Async.cs:line 662
+   at GoldTracker.IntegrationTests.PgFixture.InitializeAsync() in /home/derrick/gold-tracker/tests/GoldTracker.IntegrationTests/PgFixture.cs:line 69</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="f897bda0-bede-4a4c-96fd-93f03db52e17" testId="a6b77aae-1b70-3000-dcd8-c79db6add1d2" testName="GoldTracker.IntegrationTests.RepositoryTests.GetDayOverDay_should_compute_delta_and_direction" computerName="testcursor" duration="00:00:00.0010000" startTime="2025-11-07T11:09:27.9698372+07:00" endTime="2025-11-07T11:09:27.9698373+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f897bda0-bede-4a4c-96fd-93f03db52e17">
+      <Output>
+        <ErrorInfo>
+          <Message>Npgsql.PostgresException : 0A000: extension "pgtap" is not available
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.</Message>
+          <StackTrace>   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource&lt;TResult&gt;.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteNonQuery(Boolean async, CancellationToken cancellationToken)
+   at Dapper.SqlMapper.ExecuteImplAsync(IDbConnection cnn, CommandDefinition command, Object param) in /_/Dapper/SqlMapper.Async.cs:line 662
+   at GoldTracker.IntegrationTests.PgFixture.InitializeAsync() in /home/derrick/gold-tracker/tests/GoldTracker.IntegrationTests/PgFixture.cs:line 69</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="24822ed8-a210-49be-95e1-0910c00717eb" testId="f434ff7f-bfaa-e971-45e6-f576746388e4" testName="GoldTracker.IntegrationTests.RepositoryTests.UpsertDailyClose_should_create_snapshot" computerName="testcursor" duration="00:00:00.0010000" startTime="2025-11-07T11:09:27.9661699+07:00" endTime="2025-11-07T11:09:27.9661702+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="24822ed8-a210-49be-95e1-0910c00717eb">
+      <Output>
+        <ErrorInfo>
+          <Message>Npgsql.PostgresException : 0A000: extension "pgtap" is not available
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.</Message>
+          <StackTrace>   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource&lt;TResult&gt;.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteNonQuery(Boolean async, CancellationToken cancellationToken)
+   at Dapper.SqlMapper.ExecuteImplAsync(IDbConnection cnn, CommandDefinition command, Object param) in /_/Dapper/SqlMapper.Async.cs:line 662
+   at GoldTracker.IntegrationTests.PgFixture.InitializeAsync() in /home/derrick/gold-tracker/tests/GoldTracker.IntegrationTests/PgFixture.cs:line 69</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="5de3da97-062e-4a60-879f-85be57b28453" testId="91bd8cff-ff6f-a192-63a2-d03af98adfc1" testName="GoldTracker.IntegrationTests.UnitTest1.Test1" computerName="testcursor" duration="00:00:00.0033973" startTime="2025-11-07T11:09:22.5567054+07:00" endTime="2025-11-07T11:09:22.5568240+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5de3da97-062e-4a60-879f-85be57b28453" />
+    <UnitTestResult executionId="1be00d3d-29e6-48a8-9fa0-effcccc2d5cf" testId="08189033-366b-54c2-9abc-d2ea9d578621" testName="GoldTracker.IntegrationTests.RepositoryTests.GetHistory_should_return_ordered_series" computerName="testcursor" duration="00:00:00.0010000" startTime="2025-11-07T11:09:27.9712258+07:00" endTime="2025-11-07T11:09:27.9712258+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1be00d3d-29e6-48a8-9fa0-effcccc2d5cf">
+      <Output>
+        <ErrorInfo>
+          <Message>Npgsql.PostgresException : 0A000: extension "pgtap" is not available
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.</Message>
+          <StackTrace>   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource&lt;TResult&gt;.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteNonQuery(Boolean async, CancellationToken cancellationToken)
+   at Dapper.SqlMapper.ExecuteImplAsync(IDbConnection cnn, CommandDefinition command, Object param) in /_/Dapper/SqlMapper.Async.cs:line 662
+   at GoldTracker.IntegrationTests.PgFixture.InitializeAsync() in /home/derrick/gold-tracker/tests/GoldTracker.IntegrationTests/PgFixture.cs:line 69</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="2a3fb8d3-ab30-492f-92d6-dd9fcd4974a1" testId="e5696f77-6119-fdda-687c-2c2d60417afc" testName="GoldTracker.IntegrationTests.RepositoryTests.GetLatest_should_return_latest_price" computerName="testcursor" duration="00:00:00.0010000" startTime="2025-11-07T11:09:27.9728578+07:00" endTime="2025-11-07T11:09:27.9728579+07:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2a3fb8d3-ab30-492f-92d6-dd9fcd4974a1">
+      <Output>
+        <ErrorInfo>
+          <Message>Npgsql.PostgresException : 0A000: extension "pgtap" is not available
+
+DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.</Message>
+          <StackTrace>   at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource&lt;TResult&gt;.GetResult(Int16 token)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteNonQuery(Boolean async, CancellationToken cancellationToken)
+   at Dapper.SqlMapper.ExecuteImplAsync(IDbConnection cnn, CommandDefinition command, Object param) in /_/Dapper/SqlMapper.Async.cs:line 662
+   at GoldTracker.IntegrationTests.PgFixture.InitializeAsync() in /home/derrick/gold-tracker/tests/GoldTracker.IntegrationTests/PgFixture.cs:line 69</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="GoldTracker.IntegrationTests.RepositoryTests.GetDayOverDay_should_compute_delta_and_direction" storage="/home/derrick/gold-tracker/tests/goldtracker.integrationtests/bin/release/net8.0/goldtracker.integrationtests.dll" id="a6b77aae-1b70-3000-dcd8-c79db6add1d2">
+      <Execution id="f897bda0-bede-4a4c-96fd-93f03db52e17" />
+      <TestMethod codeBase="/home/derrick/gold-tracker/tests/GoldTracker.IntegrationTests/bin/Release/net8.0/GoldTracker.IntegrationTests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GoldTracker.IntegrationTests.RepositoryTests" name="GetDayOverDay_should_compute_delta_and_direction" />
+    </UnitTest>
+    <UnitTest name="GoldTracker.IntegrationTests.RepositoryTests.UpsertDailyClose_should_create_snapshot" storage="/home/derrick/gold-tracker/tests/goldtracker.integrationtests/bin/release/net8.0/goldtracker.integrationtests.dll" id="f434ff7f-bfaa-e971-45e6-f576746388e4">
+      <Execution id="24822ed8-a210-49be-95e1-0910c00717eb" />
+      <TestMethod codeBase="/home/derrick/gold-tracker/tests/GoldTracker.IntegrationTests/bin/Release/net8.0/GoldTracker.IntegrationTests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GoldTracker.IntegrationTests.RepositoryTests" name="UpsertDailyClose_should_create_snapshot" />
+    </UnitTest>
+    <UnitTest name="GoldTracker.IntegrationTests.RepositoryTests.Insert_and_dedup_should_respect_unique_constraint" storage="/home/derrick/gold-tracker/tests/goldtracker.integrationtests/bin/release/net8.0/goldtracker.integrationtests.dll" id="afec2ddc-f871-f8b6-ab26-f2fd770a5a08">
+      <Execution id="dd8315fe-93fd-45b8-8a97-97c7c37ef257" />
+      <TestMethod codeBase="/home/derrick/gold-tracker/tests/GoldTracker.IntegrationTests/bin/Release/net8.0/GoldTracker.IntegrationTests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GoldTracker.IntegrationTests.RepositoryTests" name="Insert_and_dedup_should_respect_unique_constraint" />
+    </UnitTest>
+    <UnitTest name="GoldTracker.IntegrationTests.UnitTest1.Test1" storage="/home/derrick/gold-tracker/tests/goldtracker.integrationtests/bin/release/net8.0/goldtracker.integrationtests.dll" id="91bd8cff-ff6f-a192-63a2-d03af98adfc1">
+      <Execution id="5de3da97-062e-4a60-879f-85be57b28453" />
+      <TestMethod codeBase="/home/derrick/gold-tracker/tests/GoldTracker.IntegrationTests/bin/Release/net8.0/GoldTracker.IntegrationTests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GoldTracker.IntegrationTests.UnitTest1" name="Test1" />
+    </UnitTest>
+    <UnitTest name="GoldTracker.IntegrationTests.RepositoryTests.GetLatest_should_return_latest_price" storage="/home/derrick/gold-tracker/tests/goldtracker.integrationtests/bin/release/net8.0/goldtracker.integrationtests.dll" id="e5696f77-6119-fdda-687c-2c2d60417afc">
+      <Execution id="2a3fb8d3-ab30-492f-92d6-dd9fcd4974a1" />
+      <TestMethod codeBase="/home/derrick/gold-tracker/tests/GoldTracker.IntegrationTests/bin/Release/net8.0/GoldTracker.IntegrationTests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GoldTracker.IntegrationTests.RepositoryTests" name="GetLatest_should_return_latest_price" />
+    </UnitTest>
+    <UnitTest name="GoldTracker.IntegrationTests.RepositoryTests.GetHistory_should_return_ordered_series" storage="/home/derrick/gold-tracker/tests/goldtracker.integrationtests/bin/release/net8.0/goldtracker.integrationtests.dll" id="08189033-366b-54c2-9abc-d2ea9d578621">
+      <Execution id="1be00d3d-29e6-48a8-9fa0-effcccc2d5cf" />
+      <TestMethod codeBase="/home/derrick/gold-tracker/tests/GoldTracker.IntegrationTests/bin/Release/net8.0/GoldTracker.IntegrationTests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GoldTracker.IntegrationTests.RepositoryTests" name="GetHistory_should_return_ordered_series" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="afec2ddc-f871-f8b6-ab26-f2fd770a5a08" executionId="dd8315fe-93fd-45b8-8a97-97c7c37ef257" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a6b77aae-1b70-3000-dcd8-c79db6add1d2" executionId="f897bda0-bede-4a4c-96fd-93f03db52e17" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f434ff7f-bfaa-e971-45e6-f576746388e4" executionId="24822ed8-a210-49be-95e1-0910c00717eb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="91bd8cff-ff6f-a192-63a2-d03af98adfc1" executionId="5de3da97-062e-4a60-879f-85be57b28453" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="08189033-366b-54c2-9abc-d2ea9d578621" executionId="1be00d3d-29e6-48a8-9fa0-effcccc2d5cf" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e5696f77-6119-fdda-687c-2c2d60417afc" executionId="2a3fb8d3-ab30-492f-92d6-dd9fcd4974a1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="6" executed="6" passed="1" failed="5" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 8.0.19)
+[xUnit.net 00:00:00.09]   Discovering: GoldTracker.IntegrationTests
+[xUnit.net 00:00:00.13]   Discovered:  GoldTracker.IntegrationTests
+[xUnit.net 00:00:00.14]   Starting:    GoldTracker.IntegrationTests
+[testcontainers.org 00:00:00.16] Connected to Docker:
+  Host: unix:///var/run/docker.sock
+  Server Version: 28.5.1
+  Kernel Version: 5.14.0-547.el9.x86_64
+  API Version: 1.51
+  Operating System: CentOS Stream 9
+  Total Memory: 3.57 GB
+[testcontainers.org 00:00:00.32] Docker container 002cd37b45e7 created
+[testcontainers.org 00:00:00.36] Start Docker container 002cd37b45e7
+[testcontainers.org 00:00:00.54] Wait for Docker container 002cd37b45e7 to complete readiness checks
+[testcontainers.org 00:00:00.55] Docker container 002cd37b45e7 ready
+[testcontainers.org 00:00:02.61] Docker container abedb7b98afe created
+[testcontainers.org 00:00:02.61] Start Docker container abedb7b98afe
+[testcontainers.org 00:00:02.81] Wait for Docker container abedb7b98afe to complete readiness checks
+[testcontainers.org 00:00:02.82] Execute "pg_isready --host localhost --dbname gold --username gold" at Docker container abedb7b98afe
+[testcontainers.org 00:00:03.92] Execute "pg_isready --host localhost --dbname gold --username gold" at Docker container abedb7b98afe
+[testcontainers.org 00:00:05.01] Execute "pg_isready --host localhost --dbname gold --username gold" at Docker container abedb7b98afe
+[testcontainers.org 00:00:05.10] Docker container abedb7b98afe ready
+[xUnit.net 00:00:05.60]       Npgsql.PostgresException : 0A000: extension "pgtap" is not available
+[xUnit.net 00:00:05.60]       
+[xUnit.net 00:00:05.60]       DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+[xUnit.net 00:00:05.60]       Stack Trace:
+[xUnit.net 00:00:05.60]            at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+[xUnit.net 00:00:05.60]            at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource&lt;TResult&gt;.GetResult(Int16 token)
+[xUnit.net 00:00:05.60]            at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlCommand.ExecuteNonQuery(Boolean async, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]         /_/Dapper/SqlMapper.Async.cs(662,0): at Dapper.SqlMapper.ExecuteImplAsync(IDbConnection cnn, CommandDefinition command, Object param)
+[xUnit.net 00:00:05.61]         /home/derrick/gold-tracker/tests/GoldTracker.IntegrationTests/PgFixture.cs(69,0): at GoldTracker.IntegrationTests.PgFixture.InitializeAsync()
+[testcontainers.org 00:00:05.32] Delete Docker container abedb7b98afe
+[xUnit.net 00:00:05.61]       Npgsql.PostgresException : 0A000: extension "pgtap" is not available
+[xUnit.net 00:00:05.61]       
+[xUnit.net 00:00:05.61]       DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+[xUnit.net 00:00:05.61]       Stack Trace:
+[xUnit.net 00:00:05.61]            at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+[xUnit.net 00:00:05.61]            at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource&lt;TResult&gt;.GetResult(Int16 token)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlCommand.ExecuteNonQuery(Boolean async, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]         /_/Dapper/SqlMapper.Async.cs(662,0): at Dapper.SqlMapper.ExecuteImplAsync(IDbConnection cnn, CommandDefinition command, Object param)
+[xUnit.net 00:00:05.61]         /home/derrick/gold-tracker/tests/GoldTracker.IntegrationTests/PgFixture.cs(69,0): at GoldTracker.IntegrationTests.PgFixture.InitializeAsync()
+[xUnit.net 00:00:05.61]       Npgsql.PostgresException : 0A000: extension "pgtap" is not available
+[xUnit.net 00:00:05.61]       
+[xUnit.net 00:00:05.61]       DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+[xUnit.net 00:00:05.61]       Stack Trace:
+[xUnit.net 00:00:05.61]            at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+[xUnit.net 00:00:05.61]            at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource&lt;TResult&gt;.GetResult(Int16 token)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlCommand.ExecuteNonQuery(Boolean async, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]         /_/Dapper/SqlMapper.Async.cs(662,0): at Dapper.SqlMapper.ExecuteImplAsync(IDbConnection cnn, CommandDefinition command, Object param)
+[xUnit.net 00:00:05.61]         /home/derrick/gold-tracker/tests/GoldTracker.IntegrationTests/PgFixture.cs(69,0): at GoldTracker.IntegrationTests.PgFixture.InitializeAsync()
+[xUnit.net 00:00:05.61]       Npgsql.PostgresException : 0A000: extension "pgtap" is not available
+[xUnit.net 00:00:05.61]       
+[xUnit.net 00:00:05.61]       DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+[xUnit.net 00:00:05.61]       Stack Trace:
+[xUnit.net 00:00:05.61]            at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+[xUnit.net 00:00:05.61]            at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource&lt;TResult&gt;.GetResult(Int16 token)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlCommand.ExecuteNonQuery(Boolean async, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]         /_/Dapper/SqlMapper.Async.cs(662,0): at Dapper.SqlMapper.ExecuteImplAsync(IDbConnection cnn, CommandDefinition command, Object param)
+[xUnit.net 00:00:05.61]         /home/derrick/gold-tracker/tests/GoldTracker.IntegrationTests/PgFixture.cs(69,0): at GoldTracker.IntegrationTests.PgFixture.InitializeAsync()
+[xUnit.net 00:00:05.61]       Npgsql.PostgresException : 0A000: extension "pgtap" is not available
+[xUnit.net 00:00:05.61]       
+[xUnit.net 00:00:05.61]       DETAIL: Detail redacted as it may contain sensitive data. Specify 'Include Error Detail' in the connection string to include this information.
+[xUnit.net 00:00:05.61]       Stack Trace:
+[xUnit.net 00:00:05.61]            at Npgsql.Internal.NpgsqlConnector.ReadMessageLong(Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+[xUnit.net 00:00:05.61]            at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource&lt;TResult&gt;.GetResult(Int16 token)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlDataReader.NextResult(Boolean async, Boolean isConsuming, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlCommand.ExecuteReader(Boolean async, CommandBehavior behavior, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]            at Npgsql.NpgsqlCommand.ExecuteNonQuery(Boolean async, CancellationToken cancellationToken)
+[xUnit.net 00:00:05.61]         /_/Dapper/SqlMapper.Async.cs(662,0): at Dapper.SqlMapper.ExecuteImplAsync(IDbConnection cnn, CommandDefinition command, Object param)
+[xUnit.net 00:00:05.61]         /home/derrick/gold-tracker/tests/GoldTracker.IntegrationTests/PgFixture.cs(69,0): at GoldTracker.IntegrationTests.PgFixture.InitializeAsync()
+[xUnit.net 00:00:05.84]   Finished:    GoldTracker.IntegrationTests
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="testcursor" outcome="Error" timestamp="2025-11-07T11:09:27.9623781+07:00">
+        <Text>[xUnit.net 00:00:05.60]     GoldTracker.IntegrationTests.RepositoryTests.UpsertDailyClose_should_create_snapshot [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="testcursor" outcome="Error" timestamp="2025-11-07T11:09:27.9673438+07:00">
+        <Text>[xUnit.net 00:00:05.61]     GoldTracker.IntegrationTests.RepositoryTests.GetDayOverDay_should_compute_delta_and_direction [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="testcursor" outcome="Error" timestamp="2025-11-07T11:09:27.9712686+07:00">
+        <Text>[xUnit.net 00:00:05.61]     GoldTracker.IntegrationTests.RepositoryTests.GetHistory_should_return_ordered_series [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="testcursor" outcome="Error" timestamp="2025-11-07T11:09:27.9716036+07:00">
+        <Text>[xUnit.net 00:00:05.61]     GoldTracker.IntegrationTests.RepositoryTests.Insert_and_dedup_should_respect_unique_constraint [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="testcursor" outcome="Error" timestamp="2025-11-07T11:09:27.9724838+07:00">
+        <Text>[xUnit.net 00:00:05.61]     GoldTracker.IntegrationTests.RepositoryTests.GetLatest_should_return_latest_price [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

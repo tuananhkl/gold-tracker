@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GoldTracker.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+652ed30d29acc6dba08988acee981bdf04393a51")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7f642b45ef306bc8ab079a204e410b8d763ff741")]
 [assembly: System.Reflection.AssemblyProductAttribute("GoldTracker.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GoldTracker.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

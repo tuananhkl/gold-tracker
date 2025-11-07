@@ -1,6 +1,7 @@
 using GoldTracker.Application.Contracts;
 using GoldTracker.Infrastructure.DI;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Npgsql;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,9 +29,24 @@ if (app.Environment.IsDevelopment())
 app.MapGet("/healthz", () => Results.Json(new { status = "healthy" }))
   .WithTags("Ops");
 
-var ready = true; // set true after build; could be gated on DI readiness
-app.MapGet("/readyz", () => ready ? Results.Ok() : Results.StatusCode(503))
-  .WithTags("Ops");
+app.MapGet("/readyz", async () =>
+{
+  try
+  {
+    // Try to connect to DB
+    var connString = builder.Configuration.GetConnectionString("Postgres")
+      ?? Environment.GetEnvironmentVariable("POSTGRES_CONN")
+      ?? "Host=localhost;Port=5432;Username=gold;Password=gold;Database=gold";
+    using var conn = new Npgsql.NpgsqlConnection(connString);
+    await conn.OpenAsync();
+    await conn.CloseAsync();
+    return Results.Ok();
+  }
+  catch
+  {
+    return Results.StatusCode(503);
+  }
+}).WithTags("Ops");
 
 // Prices endpoints
 app.MapGet("/api/prices/latest", async (string? kind, string? brand, string? region, IPriceQuery svc, CancellationToken ct) =>

@@ -101,3 +101,8 @@
 /home/derrick/gold-tracker/tests/GoldTracker.UnitTests/obj/Release/net8.0/GoldTracker.UnitTests.pdb
 /home/derrick/gold-tracker/tests/GoldTracker.UnitTests/obj/Release/net8.0/GoldTracker.UnitTests.genruntimeconfig.cache
 /home/derrick/gold-tracker/tests/GoldTracker.UnitTests/obj/Release/net8.0/ref/GoldTracker.UnitTests.dll
+/home/derrick/gold-tracker/tests/GoldTracker.UnitTests/bin/Release/net8.0/Castle.Core.dll
+/home/derrick/gold-tracker/tests/GoldTracker.UnitTests/bin/Release/net8.0/Moq.dll
+/home/derrick/gold-tracker/tests/GoldTracker.UnitTests/bin/Release/net8.0/System.Diagnostics.EventLog.dll
+/home/derrick/gold-tracker/tests/GoldTracker.UnitTests/bin/Release/net8.0/runtimes/win/lib/net6.0/System.Diagnostics.EventLog.Messages.dll
+/home/derrick/gold-tracker/tests/GoldTracker.UnitTests/bin/Release/net8.0/runtimes/win/lib/net6.0/System.Diagnostics.EventLog.dll

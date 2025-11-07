@@ -9,4 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="../GoldTracker.Domain/GoldTracker.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
+  </ItemGroup>
 </Project>

@@ -444,3 +444,5 @@
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/obj/Release/net8.0/GoldTracker.ApiTests.pdb
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/obj/Release/net8.0/GoldTracker.ApiTests.genruntimeconfig.cache
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/obj/Release/net8.0/ref/GoldTracker.ApiTests.dll
+/home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/Dapper.dll
+/home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/Npgsql.dll

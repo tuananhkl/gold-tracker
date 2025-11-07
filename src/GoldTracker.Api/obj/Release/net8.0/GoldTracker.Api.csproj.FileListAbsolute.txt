@@ -66,3 +66,5 @@
 /home/derrick/gold-tracker/src/GoldTracker.Api/obj/Release/net8.0/GoldTracker.Api.pdb
 /home/derrick/gold-tracker/src/GoldTracker.Api/obj/Release/net8.0/GoldTracker.Api.genruntimeconfig.cache
 /home/derrick/gold-tracker/src/GoldTracker.Api/obj/Release/net8.0/ref/GoldTracker.Api.dll
+/home/derrick/gold-tracker/src/GoldTracker.Api/bin/Release/net8.0/Dapper.dll
+/home/derrick/gold-tracker/src/GoldTracker.Api/bin/Release/net8.0/Npgsql.dll
