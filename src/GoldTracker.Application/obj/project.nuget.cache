@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "KYC/cCT0Kvc=",
+  "dgSpecHash": "6yiqZ+MnUjU=",
   "success": true,
   "projectFilePath": "/home/derrick/gold-tracker/src/GoldTracker.Application/GoldTracker.Application.csproj",
   "expectedPackageFiles": [
+    "/home/derrick/.nuget/packages/dapper/2.1.66/dapper.2.1.66.nupkg.sha512",
     "/home/derrick/.nuget/packages/microsoft.netcore.platforms/1.1.0/microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "/home/derrick/.nuget/packages/microsoft.netcore.targets/1.1.0/microsoft.netcore.targets.1.1.0.nupkg.sha512",
     "/home/derrick/.nuget/packages/runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl/4.3.2/runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",

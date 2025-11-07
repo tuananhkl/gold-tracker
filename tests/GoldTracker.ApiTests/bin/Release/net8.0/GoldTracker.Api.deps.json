@@ -687,6 +687,7 @@
       },
       "GoldTracker.Application/1.0.0": {
         "dependencies": {
+          "Dapper": "2.1.66",
           "GoldTracker.Domain": "1.0.0",
           "System.Security.Cryptography.Algorithms": "4.3.1"
         },

@@ -90,6 +90,9 @@ app.MapGet("/api/sources/health", async (ISourceQuery svc, CancellationToken ct)
 // Admin endpoints
 app.MapAdminEndpoints();
 
+// V1 Public API endpoints
+app.MapPricesV1Endpoints();
+
 app.Run();
 
 public partial class Program { }

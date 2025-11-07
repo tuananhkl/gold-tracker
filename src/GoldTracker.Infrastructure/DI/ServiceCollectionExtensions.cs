@@ -48,6 +48,11 @@ public static class ServiceCollectionExtensions
     services.AddScoped<IPriceQuery, PriceReadService>();
     services.AddScoped<IChangeQuery, PriceReadService>();
     services.AddScoped<ISourceQuery, InMemorySourceService>(); // Keep for now
+    
+    // V1 API services
+    services.AddScoped<GoldTracker.Application.Contracts.IPriceV1Query, GoldTracker.Application.Queries.PriceV1ReadService>();
+    services.AddScoped<GoldTracker.Application.Contracts.Repositories.IDbConnectionFactory>(sp => 
+      sp.GetRequiredService<DapperConnectionFactory>());
 
     return services;
   }

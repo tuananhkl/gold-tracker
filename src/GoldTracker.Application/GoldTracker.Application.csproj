@@ -10,6 +10,7 @@
     <ProjectReference Include="../GoldTracker.Domain/GoldTracker.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.66" />
     <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
   </ItemGroup>
 </Project>

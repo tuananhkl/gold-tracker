@@ -76,6 +76,175 @@ public sealed class PriceTickRepository : IPriceTickRepository
     return results.ToList();
   }
 
+  public async Task<IReadOnlyList<LatestPriceWithDetails>> GetLatestWithDetailsAsync(string? kind, string? brand, string? region, CancellationToken ct = default)
+  {
+    await using var conn = _factory.CreateConnection();
+    await conn.OpenAsync(ct);
+
+    var sql = @"
+      SELECT
+        v.product_id as ProductId,
+        p.brand as Brand,
+        p.form as Form,
+        p.karat as Karat,
+        p.region as Region,
+        s.name as SourceName,
+        v.price_buy as PriceBuy,
+        v.price_sell as PriceSell,
+        v.currency as Currency,
+        v.collected_at as CollectedAt,
+        v.effective_at as EffectiveAt
+      FROM gold.v_latest_price_per_product v
+      JOIN gold.product p ON p.id = v.product_id
+      JOIN gold.source s ON s.id = v.source_id
+      WHERE 1=1";
+
+    var parameters = new DynamicParameters();
+    if (!string.IsNullOrWhiteSpace(kind))
+    {
+      sql += " AND p.form = @form::text";
+      parameters.Add("form", kind);
+    }
+    if (!string.IsNullOrWhiteSpace(brand))
+    {
+      sql += " AND p.brand = @brand";
+      parameters.Add("brand", brand);
+    }
+    if (!string.IsNullOrWhiteSpace(region))
+    {
+      sql += " AND p.region = @region";
+      parameters.Add("region", region);
+    }
+
+    var results = await conn.QueryAsync<LatestPriceWithDetails>(sql, parameters);
+    return results.ToList();
+  }
+
+  public async Task<IReadOnlyList<HistoryPointWithDetails>> GetHistoryWithDetailsAsync(
+    Guid productId,
+    Guid sourceId,
+    DateOnly fromDate,
+    DateOnly toDate,
+    CancellationToken ct = default)
+  {
+    await using var conn = _factory.CreateConnection();
+    await conn.OpenAsync(ct);
+
+    var sql = @"
+      SELECT
+        ds.date as Date,
+        ds.price_buy_close as PriceBuyClose,
+        ds.price_sell_close as PriceSellClose
+      FROM gold.daily_snapshot ds
+      WHERE ds.product_id = @productId
+        AND ds.source_id = @sourceId
+        AND ds.date >= @fromDate
+        AND ds.date <= @toDate
+      ORDER BY ds.date ASC";
+
+    var parameters = new DynamicParameters();
+    parameters.Add("productId", productId);
+    parameters.Add("sourceId", sourceId);
+    parameters.Add("fromDate", fromDate);
+    parameters.Add("toDate", toDate);
+
+    var results = await conn.QueryAsync<HistoryPointWithDetails>(sql, parameters);
+    return results.ToList();
+  }
+
+  public async Task<IReadOnlyList<ChangeItemWithDetails>> GetChangesWithDetailsAsync(string? kind, string? brand, string? region, CancellationToken ct = default)
+  {
+    await using var conn = _factory.CreateConnection();
+    await conn.OpenAsync(ct);
+
+    var sql = @"
+      SELECT
+        v.product_id as ProductId,
+        p.brand as Brand,
+        p.form as Form,
+        p.karat as Karat,
+        p.region as Region,
+        s.name as SourceName,
+        v.date as Date,
+        v.price_sell_close as PriceSellClose,
+        v.delta_vs_yesterday as DeltaVsYesterday,
+        v.direction as Direction
+      FROM gold.v_day_over_day v
+      JOIN gold.product p ON p.id = v.product_id
+      JOIN gold.source s ON s.id = v.source_id
+      WHERE 1=1";
+
+    var parameters = new DynamicParameters();
+    if (!string.IsNullOrWhiteSpace(kind))
+    {
+      sql += " AND p.form = @form::text";
+      parameters.Add("form", kind);
+    }
+    if (!string.IsNullOrWhiteSpace(brand))
+    {
+      sql += " AND p.brand = @brand";
+      parameters.Add("brand", brand);
+    }
+    if (!string.IsNullOrWhiteSpace(region))
+    {
+      sql += " AND p.region = @region";
+      parameters.Add("region", region);
+    }
+
+    sql += @"
+      AND v.date = (
+        SELECT MAX(v2.date)
+        FROM gold.v_day_over_day v2
+        JOIN gold.product p2 ON p2.id = v2.product_id
+        WHERE 1=1";
+    
+    if (!string.IsNullOrWhiteSpace(kind))
+      sql += " AND p2.form = @form::text";
+    if (!string.IsNullOrWhiteSpace(brand))
+      sql += " AND p2.brand = @brand";
+    if (!string.IsNullOrWhiteSpace(region))
+      sql += " AND p2.region = @region";
+    
+    sql += ") ORDER BY p.brand, p.form, p.karat, p.region, s.name";
+
+    var results = await conn.QueryAsync<ChangeItemWithDetails>(sql, parameters);
+    return results.ToList();
+  }
+
+  // Helper DTOs for repository results
+  public record LatestPriceWithDetails(
+    Guid ProductId,
+    string Brand,
+    string Form,
+    int? Karat,
+    string? Region,
+    string SourceName,
+    decimal PriceBuy,
+    decimal PriceSell,
+    string Currency,
+    DateTimeOffset CollectedAt,
+    DateTimeOffset EffectiveAt
+  );
+
+  public record HistoryPointWithDetails(
+    DateOnly Date,
+    decimal PriceBuyClose,
+    decimal PriceSellClose
+  );
+
+  public record ChangeItemWithDetails(
+    Guid ProductId,
+    string Brand,
+    string Form,
+    int? Karat,
+    string? Region,
+    string SourceName,
+    DateOnly Date,
+    decimal PriceSellClose,
+    decimal DeltaVsYesterday,
+    string Direction
+  );
+
   public async Task<IReadOnlyList<(DateOnly Date, decimal PriceSell)>> GetHistoryAsync(string? kind, int days, string? brand, string? region, CancellationToken ct = default)
   {
     await using var conn = _factory.CreateConnection();
