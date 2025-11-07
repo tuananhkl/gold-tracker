@@ -6,8 +6,13 @@ using GoldTracker.Domain.Normalization;
 using GoldTracker.Infrastructure.Config;
 using GoldTracker.Infrastructure.Persistence;
 using GoldTracker.Infrastructure.Persistence.Repositories;
+using GoldTracker.Infrastructure.Scrapers.Doji;
+using GoldTracker.Infrastructure.Scheduling;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Http;
+using Polly;
+using Polly.Extensions.Http;
 
 namespace GoldTracker.Infrastructure.DI;
 
@@ -17,6 +22,7 @@ public static class ServiceCollectionExtensions
   {
     services.AddOptions<SourceOptions>().Bind(configuration.GetSection(SourceOptions.SectionName));
     services.AddOptions<ScheduleOptions>().Bind(configuration.GetSection(ScheduleOptions.SectionName));
+    services.AddOptions<DojiOptions>().Bind(configuration.GetSection(DojiOptions.SectionName));
 
     // Database connection
     var connString = configuration.GetConnectionString("Postgres")
@@ -37,6 +43,41 @@ public static class ServiceCollectionExtensions
     services.AddScoped<IPriceQuery, PriceReadService>();
     services.AddScoped<IChangeQuery, PriceReadService>();
     services.AddScoped<ISourceQuery, InMemorySourceService>(); // Keep for now
+
+    return services;
+  }
+
+  public static IServiceCollection AddDojiScraper(this IServiceCollection services, IConfiguration configuration)
+  {
+    // HTTP client for DOJI - retry logic handled in DojiScraper
+    services.AddHttpClient("doji", (sp, client) =>
+    {
+      var options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<DojiOptions>>().Value;
+      client.BaseAddress = new Uri(options.BaseUrl);
+      client.Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds);
+      client.DefaultRequestHeaders.Add("User-Agent", "GoldTracker/1.0");
+    });
+
+    services.AddSingleton<DojiParser>();
+    services.AddScoped<IDojiScraper, DojiScraper>();
+
+    return services;
+  }
+
+  public static IServiceCollection AddScheduling(this IServiceCollection services)
+  {
+    var scraperEnabled = bool.Parse(Environment.GetEnvironmentVariable("SCRAPER_ENABLED") ?? "false");
+    var snapshotEnabled = bool.Parse(Environment.GetEnvironmentVariable("SNAPSHOT_ENABLED") ?? "false");
+
+    if (scraperEnabled)
+    {
+      services.AddHostedService<TenMinuteScrapeService>();
+    }
+
+    if (snapshotEnabled)
+    {
+      services.AddHostedService<DailySnapshotService>();
+    }
 
     return services;
   }

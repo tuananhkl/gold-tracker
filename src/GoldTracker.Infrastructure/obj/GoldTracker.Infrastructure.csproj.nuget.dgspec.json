@@ -185,6 +185,14 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "AngleSharp": {
+              "target": "Package",
+              "version": "[1.3.0, )"
+            },
+            "Cronos": {
+              "target": "Package",
+              "version": "[0.11.1, )"
+            },
             "Dapper": {
               "target": "Package",
               "version": "[2.1.66, )"
@@ -194,6 +202,14 @@
               "version": "[9.0.10, )"
             },
             "Microsoft.Extensions.DependencyInjection.Abstractions": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Microsoft.Extensions.Hosting.Abstractions": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Microsoft.Extensions.Http": {
               "target": "Package",
               "version": "[9.0.10, )"
             },
@@ -208,6 +224,10 @@
             "Npgsql": {
               "target": "Package",
               "version": "[9.0.4, )"
+            },
+            "Polly.Extensions.Http": {
+              "target": "Package",
+              "version": "[3.0.0, )"
             }
           },
           "imports": [

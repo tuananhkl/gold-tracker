@@ -136,6 +136,120 @@
         }
       }
     },
+    "/home/derrick/gold-tracker/src/GoldTracker.Infrastructure/GoldTracker.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/derrick/gold-tracker/src/GoldTracker.Infrastructure/GoldTracker.Infrastructure.csproj",
+        "projectName": "GoldTracker.Infrastructure",
+        "projectPath": "/home/derrick/gold-tracker/src/GoldTracker.Infrastructure/GoldTracker.Infrastructure.csproj",
+        "packagesPath": "/home/derrick/.nuget/packages/",
+        "outputPath": "/home/derrick/gold-tracker/src/GoldTracker.Infrastructure/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/derrick/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "/usr/lib64/dotnet/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/home/derrick/gold-tracker/src/GoldTracker.Application/GoldTracker.Application.csproj": {
+                "projectPath": "/home/derrick/gold-tracker/src/GoldTracker.Application/GoldTracker.Application.csproj"
+              },
+              "/home/derrick/gold-tracker/src/GoldTracker.Domain/GoldTracker.Domain.csproj": {
+                "projectPath": "/home/derrick/gold-tracker/src/GoldTracker.Domain/GoldTracker.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true,
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "AngleSharp": {
+              "target": "Package",
+              "version": "[1.3.0, )"
+            },
+            "Cronos": {
+              "target": "Package",
+              "version": "[0.11.1, )"
+            },
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.1.66, )"
+            },
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Microsoft.Extensions.DependencyInjection.Abstractions": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Microsoft.Extensions.Hosting.Abstractions": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Microsoft.Extensions.Http": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Microsoft.Extensions.Options": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Microsoft.Extensions.Options.ConfigurationExtensions": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Npgsql": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
+            "Polly.Extensions.Http": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/9.0.109/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
     "/home/derrick/gold-tracker/tests/GoldTracker.UnitTests/GoldTracker.UnitTests.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -161,6 +275,9 @@
             "projectReferences": {
               "/home/derrick/gold-tracker/src/GoldTracker.Application/GoldTracker.Application.csproj": {
                 "projectPath": "/home/derrick/gold-tracker/src/GoldTracker.Application/GoldTracker.Application.csproj"
+              },
+              "/home/derrick/gold-tracker/src/GoldTracker.Infrastructure/GoldTracker.Infrastructure.csproj": {
+                "projectPath": "/home/derrick/gold-tracker/src/GoldTracker.Infrastructure/GoldTracker.Infrastructure.csproj"
               }
             }
           }

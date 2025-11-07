@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../src/GoldTracker.Application/GoldTracker.Application.csproj" />
+    <ProjectReference Include="..\..\src\GoldTracker.Infrastructure\GoldTracker.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

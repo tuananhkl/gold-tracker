@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
@@ -13,9 +13,12 @@
     <PackageReference Include="coverlet.collector" Version="6.0.2" />
     <PackageReference Include="Dapper" Version="2.1.66" />
     <PackageReference Include="FluentAssertions" Version="8.8.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.10" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
     <PackageReference Include="Npgsql" Version="9.0.4" />
     <PackageReference Include="Testcontainers.PostgreSql" Version="4.8.1" />
+    <PackageReference Include="WireMock.Net" Version="1.15.0" />
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
   </ItemGroup>

@@ -1,3 +1,4 @@
+using GoldTracker.Api.Endpoints;
 using GoldTracker.Application.Contracts;
 using GoldTracker.Infrastructure.DI;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -14,6 +15,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddGoldTrackerCore(builder.Configuration);
+builder.Services.AddDojiScraper(builder.Configuration);
+builder.Services.AddScheduling();
 
 var app = builder.Build();
 
@@ -74,6 +77,9 @@ app.MapGet("/api/sources/health", async (ISourceQuery svc, CancellationToken ct)
   var dto = await svc.GetHealthAsync(ct);
   return Results.Json(dto);
 }).WithTags("Sources");
+
+// Admin endpoints
+app.MapAdminEndpoints();
 
 app.Run();
 

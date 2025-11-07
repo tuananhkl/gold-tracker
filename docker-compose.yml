@@ -77,6 +77,9 @@ services:
       ASPNETCORE_URLS: http://+:8080
       # use DB from compose; Program.cs should read POSTGRES_CONN
       POSTGRES_CONN: Host=postgres;Port=5432;Username=gold;Password=gold;Database=gold
+      SCRAPER_ENABLED: "false"
+      SNAPSHOT_ENABLED: "false"
+      TZ: Asia/Ho_Chi_Minh
     ports:
       - "8080:8080"
     healthcheck:

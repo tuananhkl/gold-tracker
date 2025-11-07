@@ -3,5 +3,8 @@ namespace GoldTracker.Infrastructure.Config;
 public sealed class ScheduleOptions
 {
   public const string SectionName = "Schedule";
-  public string FrequencyCron { get; init; } = "*/10 7-21 * * *"; // every 10 min 07:00-21:59 (placeholder)
+  public string CronExpression { get; init; } = "*/10 * * * *"; // every 10 minutes
+  public TimeOnly? StartHourUtc { get; init; }
+  public TimeOnly? EndHourUtc { get; init; }
+  public int IntervalMinutes { get; init; } = 10;
 }

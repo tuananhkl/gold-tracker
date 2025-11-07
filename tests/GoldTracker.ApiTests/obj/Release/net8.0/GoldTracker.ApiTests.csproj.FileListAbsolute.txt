@@ -109,7 +109,6 @@
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/refs/Microsoft.Extensions.Caching.Abstractions.dll
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/refs/Microsoft.Extensions.Caching.Memory.dll
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/refs/Microsoft.Extensions.Configuration.CommandLine.dll
-/home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/refs/Microsoft.Extensions.Configuration.dll
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/refs/Microsoft.Extensions.Configuration.EnvironmentVariables.dll
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/refs/Microsoft.Extensions.Configuration.FileExtensions.dll
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/refs/Microsoft.Extensions.Configuration.Ini.dll
@@ -117,7 +116,6 @@
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/refs/Microsoft.Extensions.Configuration.KeyPerFile.dll
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/refs/Microsoft.Extensions.Configuration.UserSecrets.dll
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/refs/Microsoft.Extensions.Configuration.Xml.dll
-/home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/refs/Microsoft.Extensions.Diagnostics.dll
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/refs/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/refs/Microsoft.Extensions.Diagnostics.HealthChecks.dll
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/refs/Microsoft.Extensions.Features.dll
@@ -126,7 +124,6 @@
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/refs/Microsoft.Extensions.FileProviders.Physical.dll
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/refs/Microsoft.Extensions.FileSystemGlobbing.dll
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/refs/Microsoft.Extensions.Hosting.dll
-/home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/refs/Microsoft.Extensions.Http.dll
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/refs/Microsoft.Extensions.Identity.Core.dll
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/refs/Microsoft.Extensions.Identity.Stores.dll
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/refs/Microsoft.Extensions.Localization.Abstractions.dll
@@ -446,3 +443,9 @@
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/obj/Release/net8.0/ref/GoldTracker.ApiTests.dll
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/Dapper.dll
 /home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/Npgsql.dll
+/home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/AngleSharp.dll
+/home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/Cronos.dll
+/home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/Microsoft.Extensions.Configuration.dll
+/home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/Microsoft.Extensions.Http.dll
+/home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/Polly.dll
+/home/derrick/gold-tracker/tests/GoldTracker.ApiTests/bin/Release/net8.0/Polly.Extensions.Http.dll
