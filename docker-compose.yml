@@ -81,7 +81,7 @@ services:
       SNAPSHOT_ENABLED: "false"
       TZ: Asia/Ho_Chi_Minh
     ports:
-      - "8080:8080"
+      - "0.0.0.0:8080:8080/tcp"
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:8080/healthz"]
       interval: 5s

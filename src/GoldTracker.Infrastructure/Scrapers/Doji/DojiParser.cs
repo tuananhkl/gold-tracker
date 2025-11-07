@@ -15,71 +15,76 @@ public sealed class DojiParser
     var records = new List<RawPriceRecord>();
     var now = DateTimeOffset.UtcNow;
 
-    // Try to find price tables or price elements
-    // This is a generic parser - adjust selectors based on actual DOJI HTML structure
-    var priceRows = document.QuerySelectorAll("tr, .price-row, .gold-item, [data-type='gold']");
-    
-    foreach (var row in priceRows)
+    // Try table rows first (tr > td structure)
+    var tableRows = document.QuerySelectorAll("table tr");
+    foreach (var row in tableRows)
     {
-      var text = row.TextContent ?? string.Empty;
-      
-      // Look for ring/bar indicators
-      var form = ExtractForm(text);
+      var cells = row.QuerySelectorAll("td").ToList();
+      if (cells.Count < 4) continue; // Need at least 4 cells: form/karat, region, buy, sell
+
+      var formKaratText = cells[0].TextContent?.Trim() ?? string.Empty;
+      var regionText = cells[1].TextContent?.Trim() ?? string.Empty;
+      var buyText = cells[2].TextContent?.Trim() ?? string.Empty;
+      var sellText = cells[3].TextContent?.Trim() ?? string.Empty;
+
+      var form = NormalizeForm(formKaratText);
       if (form is null) continue;
 
-      // Extract karat
-      var karat = ExtractKarat(text);
+      var karat = NormalizeKarat(formKaratText);
+      var region = NormalizeRegion(regionText);
+      var priceBuy = ParsePrice(buyText);
+      var priceSell = ParsePrice(sellText);
 
-      // Extract region
-      var region = ExtractRegion(text);
-
-      // Extract prices (look for numeric patterns)
-      var prices = ExtractPrices(text);
-      if (prices.buy <= 0 || prices.sell <= 0) continue;
+      if (priceBuy <= 0 || priceSell <= 0) continue;
 
       records.Add(new RawPriceRecord
       {
         SourceName = sourceName,
         Brand = "DOJI",
         Form = form,
-        Karat = karat?.ToString(),
+        Karat = karat,
         Region = region,
-        PriceBuy = prices.buy,
-        PriceSell = prices.sell,
+        PriceBuy = priceBuy,
+        PriceSell = priceSell,
         Currency = "VND",
         CollectedAt = now,
         EffectiveAt = now
       });
     }
 
-    // If no rows found, try alternative parsing (JSON or different HTML structure)
+    // If no table rows found, try div/span structure (.price-row > span)
     if (records.Count == 0)
     {
-      // Fallback: try to parse as JSON
-      try
+      var divRows = document.QuerySelectorAll(".price-row, div[class*='price']");
+      foreach (var row in divRows)
       {
-        var jsonRecords = ParseJson(html, sourceName);
-        if (jsonRecords.Count > 0)
-          return jsonRecords;
-      }
-      catch
-      {
-        // Not JSON, continue
-      }
+        var spans = row.QuerySelectorAll("span").ToList();
+        if (spans.Count < 4) continue; // Need at least 4 spans
 
-      // Last resort: create a default ring entry if we can extract at least prices
-      var allPrices = ExtractPrices(html);
-      if (allPrices.buy > 0 && allPrices.sell > 0)
-      {
+        var formKaratText = spans[0].TextContent?.Trim() ?? string.Empty;
+        var regionText = spans[1].TextContent?.Trim() ?? string.Empty;
+        var buyText = spans[2].TextContent?.Trim() ?? string.Empty;
+        var sellText = spans[3].TextContent?.Trim() ?? string.Empty;
+
+        var form = NormalizeForm(formKaratText);
+        if (form is null) continue;
+
+        var karat = NormalizeKarat(formKaratText);
+        var region = NormalizeRegion(regionText);
+        var priceBuy = ParsePrice(buyText);
+        var priceSell = ParsePrice(sellText);
+
+        if (priceBuy <= 0 || priceSell <= 0) continue;
+
         records.Add(new RawPriceRecord
         {
           SourceName = sourceName,
           Brand = "DOJI",
-          Form = "ring",
-          Karat = "24",
-          Region = "Hanoi",
-          PriceBuy = allPrices.buy,
-          PriceSell = allPrices.sell,
+          Form = form,
+          Karat = karat,
+          Region = region,
+          PriceBuy = priceBuy,
+          PriceSell = priceSell,
           Currency = "VND",
           CollectedAt = now,
           EffectiveAt = now
@@ -114,11 +119,20 @@ public sealed class DojiParser
     {
       var form = item.TryGetProperty("form", out var formProp) ? formProp.GetString() 
         : item.TryGetProperty("type", out var typeProp) ? typeProp.GetString() 
-        : "ring";
+        : null;
       
-      var karat = item.TryGetProperty("karat", out var karatProp) ? karatProp.GetInt32() 
-        : item.TryGetProperty("purity", out var purityProp) ? ParseKaratFromString(purityProp.GetString()) 
-        : 24;
+      if (form is null) continue; // Must have form
+      var normalizedForm = NormalizeForm(form);
+      if (normalizedForm is null) continue;
+      
+      var karatValue = item.TryGetProperty("karat", out var karatProp) 
+        ? karatProp.ValueKind == JsonValueKind.Number ? karatProp.GetInt32().ToString() 
+          : karatProp.GetString()
+        : item.TryGetProperty("purity", out var purityProp) 
+          ? purityProp.GetString() 
+          : "24";
+      
+      var karat = NormalizeKarat(karatValue ?? "24");
 
       var region = item.TryGetProperty("region", out var regionProp) ? regionProp.GetString() 
         : item.TryGetProperty("location", out var locProp) ? locProp.GetString() 
@@ -138,9 +152,9 @@ public sealed class DojiParser
       {
         SourceName = sourceName,
         Brand = "DOJI",
-        Form = form ?? "ring",
-        Karat = karat?.ToString(),
-        Region = NormalizeRegion(region),
+        Form = normalizedForm,
+        Karat = karat,
+        Region = NormalizeRegion(region ?? "Hanoi"),
         PriceBuy = priceBuy,
         PriceSell = priceSell,
         Currency = "VND",
@@ -152,8 +166,11 @@ public sealed class DojiParser
     return records;
   }
 
-  private static string? ExtractForm(string text)
+  private static string? NormalizeForm(string text)
   {
+    if (string.IsNullOrWhiteSpace(text))
+      return null;
+    
     var lower = text.ToLowerInvariant();
     if (lower.Contains("nhẫn") || lower.Contains("ring"))
       return "ring";
@@ -162,75 +179,62 @@ public sealed class DojiParser
     return null;
   }
 
-  private static int? ExtractKarat(string text)
+  private static string NormalizeKarat(string text)
   {
-    // Look for "24K", "9999", "24", etc.
-    var karatMatch = System.Text.RegularExpressions.Regex.Match(text, @"(\d{1,2})\s*K|9999|(\d{1,2})\s*karat");
-    if (karatMatch.Success)
-    {
-      if (karatMatch.Groups[1].Success && int.TryParse(karatMatch.Groups[1].Value, out var k))
-        return k;
-      if (text.Contains("9999"))
-        return 24;
-    }
-    return 24; // Default
-  }
-
-  private static string? ExtractRegion(string text)
-  {
+    if (string.IsNullOrWhiteSpace(text))
+      return "24";
+    
     var lower = text.ToLowerInvariant();
-    if (lower.Contains("hanoi") || lower.Contains("hà nội"))
-      return "Hanoi";
-    if (lower.Contains("hcmc") || lower.Contains("hồ chí minh") || lower.Contains("ho chi minh"))
-      return "HCMC";
-    return "Hanoi"; // Default
+    
+    // Check for "9999" first (common synonym for 24K)
+    if (lower.Contains("9999"))
+      return "24";
+    
+    // Look for "24K", "18K", etc.
+    var karatMatch = System.Text.RegularExpressions.Regex.Match(text, @"(\d{1,2})\s*K", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+    if (karatMatch.Success && karatMatch.Groups[1].Success)
+    {
+      if (int.TryParse(karatMatch.Groups[1].Value, out var k) && k > 0 && k <= 24)
+        return k.ToString();
+    }
+    
+    // Look for numeric karat without K
+    var numericMatch = System.Text.RegularExpressions.Regex.Match(text, @"\b(18|20|22|24)\b");
+    if (numericMatch.Success)
+    {
+      if (int.TryParse(numericMatch.Value, out var k))
+        return k.ToString();
+    }
+    
+    return "24"; // Default
   }
 
-  private static (decimal buy, decimal sell) ExtractPrices(string text)
+  private static string NormalizeRegion(string text)
   {
-    // Remove dots, commas, and extract numbers
-    var cleaned = System.Text.RegularExpressions.Regex.Replace(text, @"[^\d]", " ");
-    var numbers = System.Text.RegularExpressions.Regex.Matches(cleaned, @"\d{6,}")
-      .Cast<System.Text.RegularExpressions.Match>()
-      .Select(m => decimal.TryParse(m.Value, out var v) ? v : 0)
-      .Where(v => v > 1000000) // Prices should be > 1M VND
-      .ToList();
-
-    if (numbers.Count >= 2)
-      return (numbers[0], numbers[1]);
-    if (numbers.Count == 1)
-      return (numbers[0], numbers[0] + 100000); // Estimate sell = buy + 100k
-
-    return (0, 0);
-  }
-
-  private static int? ParseKaratFromString(string? value)
-  {
-    if (string.IsNullOrWhiteSpace(value))
-      return 24;
-    
-    if (value.Contains("9999") || value.Contains("999"))
-      return 24;
-    
-    var match = System.Text.RegularExpressions.Regex.Match(value, @"(\d{1,2})");
-    if (match.Success && int.TryParse(match.Groups[1].Value, out var k))
-      return k;
-    
-    return 24;
-  }
-
-  private static string NormalizeRegion(string? region)
-  {
-    if (string.IsNullOrWhiteSpace(region))
+    if (string.IsNullOrWhiteSpace(text))
       return "Hanoi";
     
-    var lower = region.ToLowerInvariant();
+    var lower = text.ToLowerInvariant();
     if (lower.Contains("hanoi") || lower.Contains("hà nội"))
       return "Hanoi";
     if (lower.Contains("hcmc") || lower.Contains("hồ chí minh") || lower.Contains("ho chi minh") || lower.Contains("hcm"))
       return "HCMC";
-    
-    return region;
+    return "Hanoi"; // Default
   }
+
+  private static decimal ParsePrice(string text)
+  {
+    if (string.IsNullOrWhiteSpace(text))
+      return 0;
+    
+    // Remove all non-digit characters except decimal point (though prices are integers)
+    var cleaned = System.Text.RegularExpressions.Regex.Replace(text, @"[^\d]", "");
+    
+    if (decimal.TryParse(cleaned, out var price) && price > 0)
+      return price;
+    
+    return 0;
+  }
+
 }
 
