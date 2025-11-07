@@ -38,7 +38,8 @@ public sealed class DailySnapshotRepository : IDailySnapshotRepository
         price_buy_close = EXCLUDED.price_buy_close,
         price_sell_close = EXCLUDED.price_sell_close";
 
-    await conn.ExecuteAsync(sql, new { localDate });
+    var localDateParam = localDate.ToDateTime(TimeOnly.MinValue);
+    await conn.ExecuteAsync(sql, new { localDate = localDateParam });
   }
 }
 

@@ -95,7 +95,7 @@ public sealed class DojiScraper : IDojiScraper
     catch (Exception ex)
     {
       _logger.LogError(ex, "Error running DOJI scraper");
-      throw;
+      return 0;
     }
   }
 }

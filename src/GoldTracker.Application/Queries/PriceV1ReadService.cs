@@ -202,10 +202,10 @@ public sealed class PriceV1ReadService : IPriceV1Query
     historyParams.Add("fromDate", fromDate);
     historyParams.Add("toDate", toDate);
 
-    var history = await Dapper.SqlMapper.QueryAsync<(DateOnly Date, decimal PriceBuyClose, decimal PriceSellClose)>(conn2, historySql, historyParams);
+    var history = await Dapper.SqlMapper.QueryAsync<(DateTime DateUtc, decimal PriceBuyClose, decimal PriceSellClose)>(conn2, historySql, historyParams);
 
     var points = history.Select(h => new PriceHistoryPointDto(
-      h.Date,
+      DateOnly.FromDateTime(h.DateUtc),
       h.PriceBuyClose,
       h.PriceSellClose
     )).ToList();
@@ -281,7 +281,7 @@ public sealed class PriceV1ReadService : IPriceV1Query
     
     sql += ") ORDER BY p.brand, p.form, p.karat, p.region, s.name";
 
-    var changes = await Dapper.SqlMapper.QueryAsync<(Guid ProductId, string Brand, string Form, int? Karat, string? Region, string SourceName, DateOnly Date, decimal PriceSellClose, decimal DeltaVsYesterday, string Direction)>(conn, sql, parameters);
+    var changes = await Dapper.SqlMapper.QueryAsync<(Guid ProductId, string Brand, string Form, int? Karat, string? Region, string SourceName, DateTime DateUtc, decimal PriceSellClose, decimal DeltaVsYesterday, string Direction)>(conn, sql, parameters);
 
     var items = changes.Select(c => new ChangeItemDto(
       c.ProductId,
@@ -290,7 +290,7 @@ public sealed class PriceV1ReadService : IPriceV1Query
       c.Karat,
       c.Region ?? string.Empty,
       c.SourceName,
-      c.Date,
+      DateOnly.FromDateTime(c.DateUtc),
       c.PriceSellClose,
       c.DeltaVsYesterday,
       c.Direction

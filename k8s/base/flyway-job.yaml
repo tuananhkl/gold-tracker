@@ -4,6 +4,7 @@ metadata:
   name: flyway-migrate
 spec:
   ttlSecondsAfterFinished: 300
+  backoffLimit: 3
   template:
     spec:
       restartPolicy: OnFailure
@@ -14,17 +15,19 @@ spec:
           envFrom:
             - secretRef: { name: postgres-secret }
           command:
-            - flyway
-          args:
-            - -url=jdbc:postgresql://postgres:5432/$(POSTGRES_DB)
-            - -user=$(POSTGRES_USER)
-            - -password=$(POSTGRES_PASSWORD)
-            - -locations=filesystem:/flyway/sql
-            - -defaultSchema=gold
-            - -schemas=gold,public
-            - -baselineOnMigrate=true
-            - -connectRetries=30
-            - migrate
+            - /bin/sh
+            - -c
+            - |
+              flyway \
+                -url=jdbc:postgresql://postgres:5432/${POSTGRES_DB} \
+                -user=${POSTGRES_USER} \
+                -password=${POSTGRES_PASSWORD} \
+                -locations=filesystem:/flyway/sql \
+                -defaultSchema=gold \
+                -schemas=gold,public \
+                -baselineOnMigrate=true \
+                -connectRetries=30 \
+                migrate
       initContainers:
         - name: wait-pg
           image: postgres:16

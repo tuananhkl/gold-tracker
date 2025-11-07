@@ -6,5 +6,6 @@ spec:
   volumeClaimTemplates:
     - metadata: { name: pgdata }
       spec:
+        accessModes: ["ReadWriteOnce"]
         resources: { requests: { storage: 1Gi } }  # smaller for dev
 

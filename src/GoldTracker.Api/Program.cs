@@ -60,26 +60,6 @@ app.MapGet("/readyz", async () =>
   }
 }).WithTags("Ops");
 
-// Prices endpoints
-app.MapGet("/api/prices/latest", async (string? kind, string? brand, string? region, IPriceQuery svc, CancellationToken ct) =>
-{
-  var dto = await svc.GetLatestAsync(kind, brand, region, ct);
-  return Results.Json(dto);
-}).WithTags("Prices");
-
-app.MapGet("/api/prices/history", async (string? kind, int days, string? brand, string? region, IPriceQuery svc, CancellationToken ct) =>
-{
-  if (days is not (7 or 30 or 90 or 180)) return Results.BadRequest(new { error = "days must be one of 7,30,90,180" });
-  var (from, to, points) = await svc.GetHistoryAsync(kind, days, brand, region, ct);
-  return Results.Json(new { from = from.ToString("yyyy-MM-dd"), to = to.ToString("yyyy-MM-dd"), points });
-}).WithTags("Prices");
-
-app.MapGet("/api/prices/changes", async (string? kind, string? brand, string? region, IChangeQuery svc, CancellationToken ct) =>
-{
-  var dto = await svc.GetChangesAsync(kind, brand, region, ct);
-  return Results.Json(dto);
-}).WithTags("Prices");
-
 // Sources
 app.MapGet("/api/sources/health", async (ISourceQuery svc, CancellationToken ct) =>
 {

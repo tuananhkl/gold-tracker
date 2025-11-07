@@ -23,6 +23,9 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS final
 WORKDIR /app
 ENV ASPNETCORE_URLS=http://+:8080
 
+# Install timezone data for TimeZoneInfo support (e.g., Asia/Ho_Chi_Minh)
+RUN apk add --no-cache tzdata
+
 COPY --from=build /app/publish .
 
 EXPOSE 8080

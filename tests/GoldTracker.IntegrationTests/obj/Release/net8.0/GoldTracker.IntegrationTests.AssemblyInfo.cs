@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GoldTracker.IntegrationTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f1753accf960e72045c61ca549416dd931334d0a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+02a231a64d2f8e3154a7214bafdc6a8bafcfa1a0")]
 [assembly: System.Reflection.AssemblyProductAttribute("GoldTracker.IntegrationTests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GoldTracker.IntegrationTests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

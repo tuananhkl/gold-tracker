@@ -3,7 +3,9 @@
 .git
 .gitignore
 README.md
-db/
+db/*
+!db/flyway/
+!db/flyway/sql/
 docker/
 *.user
 *.suo
