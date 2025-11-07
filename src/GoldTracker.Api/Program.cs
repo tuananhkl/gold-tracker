@@ -29,7 +29,8 @@ var app = builder.Build();
 
 app.UseSerilogRequestLogging();
 
-if (app.Environment.IsDevelopment())
+// Enable Swagger in Development and Docker environments
+if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Docker")
 {
   app.UseSwagger();
   app.UseSwaggerUI();
