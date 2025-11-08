@@ -28,11 +28,11 @@ spec:
                 port:
                   number: 8080
 ---
-# API Ingress - /gold/api -> /api
+# API Ingress with /gold prefix - rewrite /gold/api -> /api
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: gold-tracker-api-ingress
+  name: gold-tracker-api-gold-ingress
   namespace: gold-dev
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "10m"
@@ -46,6 +46,28 @@ spec:
         paths:
           - path: /gold/api(/|$)(.*)
             pathType: ImplementationSpecific
+            backend:
+              service:
+                name: gold-tracker-api
+                port:
+                  number: 8080
+---
+# API Ingress without /gold prefix (for Swagger UI) - /api -> /api (no rewrite)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gold-tracker-api-direct-ingress
+  namespace: gold-dev
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: testcursor.derrick.local
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
             backend:
               service:
                 name: gold-tracker-api

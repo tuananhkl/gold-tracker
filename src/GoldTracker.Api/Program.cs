@@ -19,7 +19,15 @@ builder.Host.UseSerilog((ctx, lc) => lc
   .WriteTo.Console());
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+  // Add server with base path for Ingress
+  options.AddServer(new Microsoft.OpenApi.Models.OpenApiServer
+  {
+    Url = "/gold",
+    Description = "Gold Tracker API (via Ingress)"
+  });
+});
 
 builder.Services.AddGoldTrackerCore(builder.Configuration);
 builder.Services.AddDojiScraper(builder.Configuration);
@@ -32,8 +40,24 @@ app.UseSerilogRequestLogging();
 // Enable Swagger in Development and Docker environments
 if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Docker")
 {
-  app.UseSwagger();
-  app.UseSwaggerUI();
+  app.UseSwagger(options =>
+  {
+    options.RouteTemplate = "swagger/{documentName}/swagger.json";
+  });
+  app.UseSwaggerUI(options =>
+  {
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "GoldTracker.Api v1");
+    options.RoutePrefix = "swagger";
+    // Configure Swagger UI to use server URL from swagger.json
+    options.ConfigObject.Urls = new[] { new Swashbuckle.AspNetCore.SwaggerUI.UrlDescriptor 
+    { 
+      Name = "GoldTracker.Api v1", 
+      Url = "/swagger/v1/swagger.json" 
+    }};
+    // Enable deep linking and use server URL
+    options.EnableDeepLinking();
+    options.EnableFilter();
+  });
 }
 
 // Health endpoints
