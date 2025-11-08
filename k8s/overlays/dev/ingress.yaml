@@ -52,7 +52,51 @@ spec:
                 port:
                   number: 8080
 ---
+# UI Next.js API Routes Ingress - /api/prices/latest-table, /api/prices/history-30d -> UI service
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gold-tracker-ui-api-ingress
+  namespace: gold-dev
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: testcursor.derrick.local
+      http:
+        paths:
+          # Next.js API routes - route to UI service
+          - path: /api/prices/latest-table
+            pathType: Exact
+            backend:
+              service:
+                name: gold-tracker-ui
+                port:
+                  number: 80
+          - path: /api/prices/history-30d
+            pathType: Prefix
+            backend:
+              service:
+                name: gold-tracker-ui
+                port:
+                  number: 80
+          # Also support /gold/api/prices/latest-table for consistency
+          - path: /gold/api/prices/latest-table
+            pathType: Exact
+            backend:
+              service:
+                name: gold-tracker-ui
+                port:
+                  number: 80
+          - path: /gold/api/prices/history-30d
+            pathType: Prefix
+            backend:
+              service:
+                name: gold-tracker-ui
+                port:
+                  number: 80
+---
 # API Ingress without /gold prefix (for Swagger UI) - /api -> /api (no rewrite)
+# This must come AFTER UI API routes to avoid conflicts
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -96,6 +140,33 @@ spec:
                 name: gold-tracker-api
                 port:
                   number: 8080
+---
+# UI Static Assets Ingress - /_next/static/* -> UI service (no rewrite needed)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gold-tracker-ui-static-ingress
+  namespace: gold-dev
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: testcursor.derrick.local
+      http:
+        paths:
+          - path: /_next
+            pathType: Prefix
+            backend:
+              service:
+                name: gold-tracker-ui
+                port:
+                  number: 80
+          - path: /gold/_next
+            pathType: Prefix
+            backend:
+              service:
+                name: gold-tracker-ui
+                port:
+                  number: 80
 ---
 # UI Ingress - /gold -> /
 apiVersion: networking.k8s.io/v1
