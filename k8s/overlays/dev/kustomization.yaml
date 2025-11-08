@@ -7,7 +7,7 @@ patches:
   - path: patch-api-env.yaml
   - path: patch-postgres-storage.yaml
   - path: patch-ui-nodeport.yaml
-# uncomment if you have nginx ingress controller installed locally
-#  - path: ingress.yaml
   - path: patch-service-nodeport.yaml
+resources:
+  - ingress.yaml
 

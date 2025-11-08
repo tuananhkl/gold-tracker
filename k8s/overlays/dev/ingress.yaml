@@ -1,19 +1,99 @@
+# Health endpoints Ingress - rewrite /gold/healthz -> /healthz
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: gold-api
+  name: gold-tracker-health-ingress
+  namespace: gold-dev
   annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   ingressClassName: nginx
   rules:
-    - host: gold.local
+    - host: testcursor.derrick.local
       http:
         paths:
-          - path: /
-            pathType: Prefix
+          - path: /gold/(healthz)(/|$)(.*)
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: gold-tracker-api
-                port: { number: 8080 }
-
+                port:
+                  number: 8080
+          - path: /gold/(readyz)(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: gold-tracker-api
+                port:
+                  number: 8080
+---
+# API Ingress - /gold/api -> /api
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gold-tracker-api-ingress
+  namespace: gold-dev
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/rewrite-target: /api/$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: testcursor.derrick.local
+      http:
+        paths:
+          - path: /gold/api(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: gold-tracker-api
+                port:
+                  number: 8080
+---
+# Swagger Ingress - /gold/swagger -> /swagger
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gold-tracker-swagger-ingress
+  namespace: gold-dev
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /swagger/$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: testcursor.derrick.local
+      http:
+        paths:
+          - path: /gold/swagger(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: gold-tracker-api
+                port:
+                  number: 8080
+---
+# UI Ingress - /gold -> /
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gold-tracker-ui-ingress
+  namespace: gold-dev
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: testcursor.derrick.local
+      http:
+        paths:
+          - path: /gold(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: gold-tracker-ui
+                port:
+                  number: 80
