@@ -8,6 +8,8 @@ resources:
   - postgres-service.yaml
   - api-deployment.yaml
   - api-service.yaml
+  - ui-deployment.yaml
+  - ui-service.yaml
   - flyway-job.yaml
   - cron-scrape-doji.yaml
   - cron-snapshot-daily.yaml
