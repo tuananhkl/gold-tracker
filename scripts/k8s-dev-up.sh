@@ -70,12 +70,40 @@ for i in {1..30}; do
   [[ $i -eq 30 ]] && { echo "❌ UI not healthy"; kubectl -n ${NS} get all -o wide; kubectl -n ${NS} logs deploy/gold-tracker-ui --tail=200 || true; exit 1; }
 done
 
+echo "🔌 Port-forward PostgreSQL 5432 (listening on 0.0.0.0)"
+# Kill previous port-forward if any
+pkill -f "kubectl.*port-forward.*postgres.*5432:5432" 2>/dev/null || true
+
+PORT_FWD_PG_CMD="kubectl -n ${NS} port-forward --address 0.0.0.0 svc/postgres 5432:5432"
+nohup bash -c "$PORT_FWD_PG_CMD" >/tmp/gold_pf_pg.log 2>&1 &
+PF_PG_PID=$!
+disown ${PF_PG_PID} 2>/dev/null || true
+sleep 2
+for i in {1..30}; do
+  if pg_isready -h localhost -p 5432 -U gold -d gold >/dev/null 2>&1 || nc -z localhost 5432 2>/dev/null; then
+    echo "✅ PostgreSQL port-forward ready"
+    break
+  fi
+  sleep 1
+  [[ $i -eq 30 ]] && { echo "⚠️  PostgreSQL port-forward may not be ready (check manually)"; break; }
+done
+
 echo "✅ Cluster ready"
 echo ""
 echo "🔗 Service URLs (via port-forward):"
-echo "  API: http://localhost:8080"
-echo "  UI:  http://localhost:3000"
+echo "  API:      http://localhost:8080"
+echo "  UI:       http://localhost:3000"
+echo "  Database: localhost:5432"
+echo "    - Host:     localhost"
+echo "    - Port:     5432"
+echo "    - Database: gold"
+echo "    - Username: gold"
+echo "    - Password: gold"
 echo ""
 echo "📝 Note: Port-forwards are running in background. Check logs:"
-echo "  API: tail -f /tmp/gold_pf_api.log"
-echo "  UI:  tail -f /tmp/gold_pf_ui.log"
+echo "  API:      tail -f /tmp/gold_pf_api.log"
+echo "  UI:       tail -f /tmp/gold_pf_ui.log"
+echo "  Database: tail -f /tmp/gold_pf_pg.log"
+echo ""
+echo "💡 Connect to database:"
+echo "  psql -h localhost -p 5432 -U gold -d gold"
