@@ -12,6 +12,7 @@ public sealed class PriceV1ReadService : IPriceV1Query
   private readonly IProductRepository _productRepo;
   private readonly ISourceRepository _sourceRepo;
   private readonly IDbConnectionFactory _connectionFactory;
+  private readonly TimeZoneInfo _vietnamTimeZone;
 
   public PriceV1ReadService(
     IPriceTickRepository tickRepo,
@@ -23,6 +24,13 @@ public sealed class PriceV1ReadService : IPriceV1Query
     _productRepo = productRepo;
     _sourceRepo = sourceRepo;
     _connectionFactory = connectionFactory;
+    _vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById(
+      Environment.GetEnvironmentVariable("TZ") ?? "Asia/Ho_Chi_Minh");
+  }
+
+  private DateTimeOffset ConvertToVietnamTime(DateTimeOffset utcTime)
+  {
+    return TimeZoneInfo.ConvertTime(utcTime, _vietnamTimeZone);
   }
 
   public async Task<LatestPricesResponse> GetLatestAsync(LatestQuery query, CancellationToken ct = default)
@@ -83,8 +91,8 @@ public sealed class PriceV1ReadService : IPriceV1Query
       l.PriceBuy,
       l.PriceSell,
       l.Currency,
-      l.EffectiveAt,
-      l.CollectedAt
+      ConvertToVietnamTime(l.EffectiveAt),
+      ConvertToVietnamTime(l.CollectedAt)
     )).ToList();
 
     return new LatestPricesResponse(items);
