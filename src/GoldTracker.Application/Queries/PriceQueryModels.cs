@@ -13,3 +13,10 @@ public record HistoryQuery(
 
 public record ChangesQuery(string? Kind, string? Brand, string? Region);
 
+public record ByDateQuery(
+  DateOnly Date,
+  string? Kind = null,
+  string? Brand = null,
+  string? Region = null
+);
+

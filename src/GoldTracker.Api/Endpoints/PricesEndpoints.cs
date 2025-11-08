@@ -27,6 +27,12 @@ public static class PricesEndpoints
       .WithTags("Prices")
       .Produces<PriceChangesResponse>(StatusCodes.Status200OK)
       .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
+
+    app.MapGet("/api/prices/by-date", GetPricesByDateV1)
+      .WithName("GetPricesByDateV1")
+      .WithTags("Prices")
+      .Produces<PricesByDateResponse>(StatusCodes.Status200OK)
+      .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
   }
 
   private static async Task<IResult> GetLatestPricesV1(
@@ -109,6 +115,49 @@ public static class PricesEndpoints
 
     var changesQuery = new ChangesQuery(kind, brand, region);
     var response = await query.GetChangesAsync(changesQuery, ct);
+    return Results.Ok(response);
+  }
+
+  private static async Task<IResult> GetPricesByDateV1(
+    [FromQuery] string date,
+    [FromQuery] string? kind,
+    [FromQuery] string? brand,
+    [FromQuery] string? region,
+    IPriceV1Query query,
+    CancellationToken ct)
+  {
+    // Parse date
+    if (string.IsNullOrWhiteSpace(date))
+    {
+      return Results.Problem(
+        detail: "Date parameter is required (format: YYYY-MM-DD)",
+        statusCode: 400,
+        title: "Validation Error"
+      );
+    }
+
+    if (!DateOnly.TryParse(date, out var dateOnly))
+    {
+      return Results.Problem(
+        detail: "Invalid date format. Expected YYYY-MM-DD",
+        statusCode: 400,
+        title: "Validation Error"
+      );
+    }
+
+    // Validate
+    var (isValid, errorMessage) = ValidationHelpers.ValidateByDateQuery(dateOnly, kind, brand, region);
+    if (!isValid)
+    {
+      return Results.Problem(
+        detail: errorMessage,
+        statusCode: 400,
+        title: "Validation Error"
+      );
+    }
+
+    var byDateQuery = new ByDateQuery(dateOnly, kind, brand, region);
+    var response = await query.GetByDateAsync(byDateQuery, ct);
     return Results.Ok(response);
   }
 }

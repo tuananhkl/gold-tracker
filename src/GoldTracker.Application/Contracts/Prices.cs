@@ -47,3 +47,8 @@ public record ChangeItemDto(
 
 public record PriceChangesResponse(IReadOnlyList<ChangeItemDto> Items);
 
+public record PricesByDateResponse(
+  DateOnly Date,
+  IReadOnlyList<PriceItemDto> Items
+);
+

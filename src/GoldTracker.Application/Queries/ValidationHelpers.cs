@@ -51,6 +51,29 @@ public static class ValidationHelpers
     return ValidateLatestQuery(kind, brand, region);
   }
 
+  public static (bool IsValid, string? ErrorMessage) ValidateByDateQuery(DateOnly date, string? kind, string? brand, string? region)
+  {
+    var (isValid, error) = ValidateLatestQuery(kind, brand, region);
+    if (!isValid)
+      return (false, error);
+
+    // Validate date is not too far in the future
+    var today = DateOnly.FromDateTime(DateTime.UtcNow);
+    if (date > today.AddDays(1))
+    {
+      return (false, "Date cannot be more than 1 day in the future");
+    }
+
+    // Validate date is not too far in the past (optional, but reasonable limit)
+    var minDate = today.AddYears(-10);
+    if (date < minDate)
+    {
+      return (false, "Date cannot be more than 10 years in the past");
+    }
+
+    return (true, null);
+  }
+
   public static string NormalizeKind(string? kind)
   {
     if (string.IsNullOrWhiteSpace(kind))

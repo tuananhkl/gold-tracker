@@ -8,5 +8,6 @@ public interface IPriceV1Query
   Task<LatestPricesResponse> GetLatestAsync(LatestQuery query, CancellationToken ct = default);
   Task<PriceHistoryResponse> GetHistoryAsync(HistoryQuery query, CancellationToken ct = default);
   Task<PriceChangesResponse> GetChangesAsync(ChangesQuery query, CancellationToken ct = default);
+  Task<PricesByDateResponse> GetByDateAsync(ByDateQuery query, CancellationToken ct = default);
 }
 

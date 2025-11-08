@@ -306,5 +306,84 @@ public sealed class PriceV1ReadService : IPriceV1Query
 
     return new PriceChangesResponse(items);
   }
+
+  public async Task<PricesByDateResponse> GetByDateAsync(ByDateQuery query, CancellationToken ct = default)
+  {
+    var kind = ValidationHelpers.NormalizeKind(query.Kind);
+    var brand = query.Brand?.Trim();
+    var region = query.Region?.Trim();
+
+    // Convert date to timezone-aware range (start and end of day in Vietnam timezone)
+    var dateStart = new DateTime(query.Date.Year, query.Date.Month, query.Date.Day, 0, 0, 0);
+    var dateEnd = dateStart.AddDays(1).AddTicks(-1);
+    
+    // Convert to UTC for database query
+    var dateStartUtc = TimeZoneInfo.ConvertTimeToUtc(dateStart, _vietnamTimeZone);
+    var dateEndUtc = TimeZoneInfo.ConvertTimeToUtc(dateEnd, _vietnamTimeZone);
+
+    using var conn = _connectionFactory.CreateConnection();
+    if (conn is System.Data.IDbConnection dbConn)
+      await Task.Run(() => dbConn.Open(), ct);
+
+    var sql = @"
+      SELECT
+        pt.id,
+        pt.product_id as ProductId,
+        p.brand as Brand,
+        p.form as Form,
+        p.karat as Karat,
+        p.region as Region,
+        s.name as SourceName,
+        pt.price_buy as PriceBuy,
+        pt.price_sell as PriceSell,
+        pt.currency as Currency,
+        pt.collected_at as CollectedAt,
+        pt.effective_at as EffectiveAt
+      FROM gold.price_tick pt
+      JOIN gold.product p ON p.id = pt.product_id
+      JOIN gold.source s ON s.id = pt.source_id
+      WHERE pt.effective_at >= @dateStartUtc
+        AND pt.effective_at < @dateEndUtc";
+
+    var parameters = new Dapper.DynamicParameters();
+    parameters.Add("dateStartUtc", dateStartUtc);
+    parameters.Add("dateEndUtc", dateEndUtc);
+
+    if (!string.IsNullOrWhiteSpace(kind))
+    {
+      sql += " AND p.form = @form::text";
+      parameters.Add("form", kind);
+    }
+    if (!string.IsNullOrWhiteSpace(brand))
+    {
+      sql += " AND p.brand = @brand";
+      parameters.Add("brand", brand);
+    }
+    if (!string.IsNullOrWhiteSpace(region))
+    {
+      sql += " AND p.region = @region";
+      parameters.Add("region", region);
+    }
+
+    sql += " ORDER BY pt.effective_at ASC, p.brand, p.form, p.karat, p.region, s.name";
+
+    var ticks = await Dapper.SqlMapper.QueryAsync<(long Id, Guid ProductId, string Brand, string Form, int? Karat, string? Region, string SourceName, decimal PriceBuy, decimal PriceSell, string Currency, DateTimeOffset CollectedAt, DateTimeOffset EffectiveAt)>(conn, sql, parameters);
+
+    var items = ticks.Select(t => new PriceItemDto(
+      t.ProductId,
+      t.Brand,
+      t.Form,
+      t.Karat,
+      t.Region ?? string.Empty,
+      t.SourceName,
+      t.PriceBuy,
+      t.PriceSell,
+      t.Currency,
+      ConvertToVietnamTime(t.EffectiveAt),
+      ConvertToVietnamTime(t.CollectedAt)
+    )).ToList();
+
+    return new PricesByDateResponse(query.Date, items);
+  }
 }
 
