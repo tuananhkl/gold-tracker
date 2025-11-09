@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "XqneB26X0sQ=",
+  "dgSpecHash": "CBv6TVZiAKU=",
   "success": true,
   "projectFilePath": "/home/derrick/gold-tracker/src/GoldTracker.Api/GoldTracker.Api.csproj",
   "expectedPackageFiles": [
@@ -45,6 +45,8 @@
     "/home/derrick/.nuget/packages/runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl/4.3.2/runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",
     "/home/derrick/.nuget/packages/serilog/4.2.0/serilog.4.2.0.nupkg.sha512",
     "/home/derrick/.nuget/packages/serilog.aspnetcore/9.0.0/serilog.aspnetcore.9.0.0.nupkg.sha512",
+    "/home/derrick/.nuget/packages/serilog.enrichers.environment/3.0.1/serilog.enrichers.environment.3.0.1.nupkg.sha512",
+    "/home/derrick/.nuget/packages/serilog.enrichers.thread/4.0.0/serilog.enrichers.thread.4.0.0.nupkg.sha512",
     "/home/derrick/.nuget/packages/serilog.extensions.hosting/9.0.0/serilog.extensions.hosting.9.0.0.nupkg.sha512",
     "/home/derrick/.nuget/packages/serilog.extensions.logging/9.0.0/serilog.extensions.logging.9.0.0.nupkg.sha512",
     "/home/derrick/.nuget/packages/serilog.formatting.compact/3.0.0/serilog.formatting.compact.3.0.0.nupkg.sha512",

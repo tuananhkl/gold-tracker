@@ -27,6 +27,12 @@ spec:
               value: "false"
             - name: SNAPSHOT_ENABLED
               value: "false"
+            - name: APP_NAME
+              value: "gold-tracker-api"
+            - name: ENV
+              value: "dev"
+            - name: SERVICE_VERSION
+              value: "dev"
           envFrom:
             - configMapRef: { name: gold-app-config }
           readinessProbe:

@@ -24,6 +24,12 @@ spec:
               value: "http://gold-tracker-api:8080"
             - name: NODE_ENV
               value: "production"
+            - name: APP_NAME
+              value: "gold-tracker-ui"
+            - name: ENV
+              value: "dev"
+            - name: SERVICE_VERSION
+              value: "dev"
           readinessProbe:
             httpGet:
               path: /

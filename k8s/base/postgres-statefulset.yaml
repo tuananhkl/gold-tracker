@@ -20,6 +20,10 @@ spec:
           env:
             - name: TZ
               value: "Asia/Ho_Chi_Minh"
+            - name: POSTGRES_INITDB_ARGS
+              value: "--log-destination=stderr --logging-collector=off"
+            - name: POSTGRES_LOG_MIN_DURATION_STATEMENT
+              value: "200"
           readinessProbe:
             exec: { command: ["pg_isready","-U","gold","-d","gold"] }
             periodSeconds: 5

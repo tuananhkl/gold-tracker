@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: logging
+resources:
+  - namespace.yaml
+  - configmap-fluent-bit.yaml
+  - daemonset-fluent-bit.yaml
+# Note: secret-es.yaml is NOT included - create it manually using kubectl
+

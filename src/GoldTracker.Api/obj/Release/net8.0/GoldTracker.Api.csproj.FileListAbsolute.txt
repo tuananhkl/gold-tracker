@@ -77,3 +77,5 @@
 /home/derrick/gold-tracker/src/GoldTracker.Api/bin/Release/net8.0/Polly.Extensions.Http.dll
 /home/derrick/gold-tracker/src/GoldTracker.Api/bin/Release/net8.0/appsettings.Docker.json
 /home/derrick/gold-tracker/src/GoldTracker.Api/obj/Release/net8.0/GoldTracker.Api.sourcelink.json
+/home/derrick/gold-tracker/src/GoldTracker.Api/bin/Release/net8.0/Serilog.Enrichers.Environment.dll
+/home/derrick/gold-tracker/src/GoldTracker.Api/bin/Release/net8.0/Serilog.Enrichers.Thread.dll

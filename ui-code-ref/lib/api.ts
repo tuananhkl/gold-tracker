@@ -22,6 +22,8 @@ export interface HistorySeries {
   history: ChartData[]
 }
 
+import { createFetchOptions, getTraceId } from "./logger";
+
 const API_BASE_URL =
   process.env.PRICE_API_BASE_URL ??
   process.env.NEXT_PUBLIC_API_BASE_URL ??
@@ -96,60 +98,71 @@ const convertPrice = (value?: number | null): number | null => {
   return Math.round(Number(value) / PRICE_DIVISOR)
 }
 
-const fetchJson = async <T>(url: string): Promise<T> => {
-  const response = await fetch(url, { cache: "no-store" })
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${url}: ${response.status}`)
+const fetchJson = async <T>(url: string, traceId?: string): Promise<T> => {
+  const headers: HeadersInit = { "cache": "no-store" };
+  if (traceId) {
+    headers["x-trace-id"] = traceId;
   }
-  return response.json() as Promise<T>
-}
+  const response = await fetch(url, { cache: "no-store", headers });
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${url}: ${response.status}`);
+  }
+  return response.json() as Promise<T>;
+};
 
-const fetchLatestItems = async (): Promise<LatestPriceItem[]> => {
-  const url = new URL("/api/prices/latest", API_BASE_URL)
-  url.searchParams.set("kind", "ring")
-  const data = await fetchJson<LatestResponse>(url.toString())
-  return data.items ?? []
-}
+const fetchLatestItems = async (traceId?: string): Promise<LatestPriceItem[]> => {
+  const url = new URL("/api/prices/latest", API_BASE_URL);
+  url.searchParams.set("kind", "ring");
+  const data = await fetchJson<LatestResponse>(url.toString(), traceId);
+  return data.items ?? [];
+};
 
 const fetchHistoryPoints = async (
   brand: string,
   region: string | null,
   days: number,
+  traceId?: string,
 ): Promise<HistoryPoint[]> => {
-  const url = new URL("/api/prices/history", API_BASE_URL)
-  url.searchParams.set("kind", "ring")
-  url.searchParams.set("brand", brand)
+  const url = new URL("/api/prices/history", API_BASE_URL);
+  url.searchParams.set("kind", "ring");
+  url.searchParams.set("brand", brand);
   if (region) {
-    url.searchParams.set("region", region)
+    url.searchParams.set("region", region);
   }
-  url.searchParams.set("days", String(days))
+  url.searchParams.set("days", String(days));
 
-  const response = await fetch(url.toString(), { cache: "no-store" })
+  const headers: HeadersInit = { "cache": "no-store" };
+  if (traceId) {
+    headers["x-trace-id"] = traceId;
+  }
+
+  const response = await fetch(url.toString(), { cache: "no-store", headers });
   if (!response.ok) {
-    return []
+    return [];
   }
 
-  const payload = (await response.json()) as Partial<HistoryResponse>
-  const points = payload.points ?? []
-  return points.sort((a, b) => (a.date > b.date ? 1 : -1))
+  const payload = (await response.json()) as Partial<HistoryResponse>;
+  const points = payload.points ?? [];
+  return points.sort((a, b) => (a.date > b.date ? 1 : -1));
 }
 
 const buildRowFromItem = async (
   label: string,
   item: LatestPriceItem | undefined,
+  traceId?: string,
 ): Promise<PriceTableRow> => {
   if (!item) {
     return {
       label,
       brand: null,
       region: null,
-    }
+    };
   }
 
-  const buyToday = convertPrice(item.priceBuy)
-  const sellToday = convertPrice(item.priceSell)
+  const buyToday = convertPrice(item.priceBuy);
+  const sellToday = convertPrice(item.priceSell);
 
-  const historyPoints = await fetchHistoryPoints(item.brand, item.region, 2)
+  const historyPoints = await fetchHistoryPoints(item.brand, item.region, 2, traceId);
   const yesterdayPoint =
     historyPoints.length > 1
       ? historyPoints[historyPoints.length - 2]
@@ -176,32 +189,34 @@ const buildRowFromItem = async (
   }
 }
 
-export const getLatestTableRows = async (): Promise<PriceTableRow[]> => {
-  const latestItems = await fetchLatestItems()
-  const unused = [...latestItems]
+export const getLatestTableRows = async (traceId?: string): Promise<PriceTableRow[]> => {
+  const latestItems = await fetchLatestItems(traceId);
+  const unused = [...latestItems];
 
-  const rows: PriceTableRow[] = []
+  const rows: PriceTableRow[] = [];
   for (const config of BRAND_CONFIGS) {
     const index = unused.findIndex((item) =>
       config.matchers.some((matcher) => matcher(item)),
-    )
-    const matchedItem = index >= 0 ? unused.splice(index, 1)[0] : undefined
-    rows.push(await buildRowFromItem(config.label, matchedItem))
+    );
+    const matchedItem = index >= 0 ? unused.splice(index, 1)[0] : undefined;
+    rows.push(await buildRowFromItem(config.label, matchedItem, traceId));
   }
 
-  return rows
-}
+  return rows;
+};
 
 export const getHistorySeries = async (options: {
-  brand: string
-  region?: string | null
-  days?: number
+  brand: string;
+  region?: string | null;
+  days?: number;
+  traceId?: string;
 }): Promise<HistorySeries> => {
   const points = await fetchHistoryPoints(
     options.brand,
     options.region ?? null,
     options.days ?? 30,
-  )
+    options.traceId,
+  );
   const history = points
     .map((point) => ({
       date: point.date,
