@@ -109,6 +109,8 @@ spec:
         hostPath:
           path: /var/fluent-bit/state
           type: DirectoryOrCreate
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       tolerations:
       - operator: Exists
         effect: NoSchedule

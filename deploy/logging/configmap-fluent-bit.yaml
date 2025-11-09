@@ -79,8 +79,6 @@ data:
         Retry_Limit     5
         Index           logs-${ENV:-dev}-%Y.%m.%d
         Type            _doc
-        tls             On
-        tls.verify      Off
 
   parsers.conf: |
     [PARSER]
