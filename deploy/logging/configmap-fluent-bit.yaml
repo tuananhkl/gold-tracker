@@ -76,9 +76,11 @@ data:
         Logstash_Format On
         Replace_Dots    On
         Suppress_Type_Name On
-        Retry_Limit     5
+        Retry_Limit     10
         Index           logs-${ENV:-dev}-%Y.%m.%d
         Type            _doc
+        tls             On
+        tls.verify      Off
 
   parsers.conf: |
     [PARSER]
