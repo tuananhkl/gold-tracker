@@ -17,10 +17,6 @@ public static class SerilogConfig
         .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
         .MinimumLevel.Override("System", LogEventLevel.Warning)
         .Enrich.FromLogContext()
-        .Enrich.WithEnvironmentName()
-        .Enrich.WithMachineName()
-        .Enrich.WithProcessId()
-        .Enrich.WithThreadId()
         .Enrich.With(new VietnamTimeEnricher())
         .WriteTo.Console(new RenderedCompactJsonFormatter());
     });

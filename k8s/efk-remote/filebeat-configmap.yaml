@@ -7,13 +7,18 @@ data:
   filebeat.yml: |
     filebeat.inputs:
       - type: container
+        id: k8s-containers
         enabled: true
         paths:
           - /var/log/containers/*.log
+        fields_under_root: true
         processors:
           - add_host_metadata: {}
           - add_kubernetes_metadata:
               host: ${NODE_NAME}
+              matchers:
+                - logs_path:
+                    logs_path: "/var/log/containers/"
           - decode_json_fields:
               fields: ["message"]
               target: ""
@@ -42,10 +47,11 @@ data:
                 env: dev
                 region: vn
     output.elasticsearch:
-      hosts: ["${ELASTIC_HOSTS:http://192.168.31.156:9200}"]
+      hosts: ["${ELASTIC_HOSTS:https://192.168.31.156:9200}"]
       username: "${ELASTIC_USER}"
       password: "${ELASTIC_PASS}"
-      protocol: "http"
+      protocol: "https"
+      ssl.verification_mode: none
       indices:
         - index: "gold-tracker-api-security-%{+yyyy.MM.dd}"
           when.equals:
@@ -54,7 +60,11 @@ data:
           when.equals:
             event.dataset: "integration"
         - index: "gold-tracker-api-application-%{+yyyy.MM.dd}"
-      bulk_max_size: 2048
+          when.equals:
+            event.dataset: "application"
+      bulk_max_size: 512
       worker: 1
       compression_level: 3
+    setup.template.enabled: false
+    setup.ilm.enabled: false
 

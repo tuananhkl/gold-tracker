@@ -14,6 +14,8 @@ spec:
       labels:
         app: filebeat
     spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       serviceAccountName: filebeat
       terminationGracePeriodSeconds: 30
       containers:
@@ -47,6 +49,9 @@ spec:
             - name: varlogpods
               mountPath: /var/log/pods
               readOnly: true
+            - name: varlibdocker
+              mountPath: /var/lib/docker/containers
+              readOnly: true
             - name: config
               mountPath: /usr/share/filebeat/filebeat.yml
               subPath: filebeat.yml
@@ -57,6 +62,9 @@ spec:
         - name: varlogpods
           hostPath:
             path: /var/log/pods
+        - name: varlibdocker
+          hostPath:
+            path: /var/lib/docker/containers
         - name: config
           configMap:
             name: filebeat-config

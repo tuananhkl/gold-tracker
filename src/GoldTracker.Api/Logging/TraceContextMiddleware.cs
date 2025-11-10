@@ -28,20 +28,30 @@ public sealed class TraceContextMiddleware
     using (Serilog.Context.LogContext.PushProperty("span_id", spanId, true))
     {
       var sw = System.Diagnostics.Stopwatch.StartNew();
-      try
+      var endpoint = ctx.Request.Path.HasValue ? ctx.Request.Path.Value! : "/";
+      var method = ctx.Request.Method;
+      var bizKeys = BusinessKeyExtractor.Extract(ctx);
+
+      using (Serilog.Context.LogContext.PushProperty("message_type", "Application", true))
+      using (Serilog.Context.LogContext.PushProperty("endpoint", endpoint, true))
+      using (Serilog.Context.LogContext.PushProperty("method", method, true))
+      using (Serilog.Context.LogContext.PushProperty("biz_keys", bizKeys, true))
       {
-        Log.Information("RequestStarted {@biz_keys}", BusinessKeyExtractor.Extract(ctx));
-        await _next(ctx);
-        sw.Stop();
-        Log.Information("RequestCompleted {status} {duration_ms}",
-          ctx.Response.StatusCode, sw.Elapsed.TotalMilliseconds);
-      }
-      catch (Exception ex)
-      {
-        sw.Stop();
-        Log.Error(ex, "RequestFailed {status} {duration_ms}",
-          500, sw.Elapsed.TotalMilliseconds);
-        throw;
+        try
+        {
+          Log.Information("RequestStarted");
+          await _next(ctx);
+          sw.Stop();
+          Log.Information("RequestCompleted {status} {duration_ms}",
+            ctx.Response.StatusCode, sw.Elapsed.TotalMilliseconds);
+        }
+        catch (Exception ex)
+        {
+          sw.Stop();
+          Log.Error(ex, "RequestFailed {status} {duration_ms}",
+            500, sw.Elapsed.TotalMilliseconds);
+          throw;
+        }
       }
     }
   }
