@@ -55,10 +55,11 @@ public sealed class TraceContextMiddleware
 
           using (Serilog.Context.LogContext.PushProperty("status", ctx.Response.StatusCode, true))
           using (Serilog.Context.LogContext.PushProperty("duration_ms", sw.Elapsed.TotalMilliseconds, true))
-          using (Serilog.Context.LogContext.PushProperty("error_message", ex.Message, true))
           using (Serilog.Context.LogContext.PushProperty("error_type", ex.GetType().FullName, true))
           {
-            Log.Error(ex, ex.Message);
+            // Format exception thành string với full stack trace và đặt vào message
+            var exceptionMessage = ex.ToString();
+            Log.Error(exceptionMessage);
           }
           throw;
         }
