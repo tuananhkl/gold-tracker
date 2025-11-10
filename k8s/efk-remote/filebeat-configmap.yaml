@@ -29,6 +29,16 @@ data:
               overwrite_keys: true
           - script:
               lang: javascript
+              id: stacktrace-copy
+              source: >
+                function process(event) {
+                  var ex = event.Get("@x");
+                  if (ex != null) {
+                    event.Put("error.stack_trace", ex);
+                  }
+                }
+          - script:
+              lang: javascript
               id: message-normalize
               source: >
                 function process(event) {

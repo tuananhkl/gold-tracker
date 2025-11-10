@@ -42,14 +42,24 @@ public sealed class TraceContextMiddleware
           Log.Information("RequestStarted");
           await _next(ctx);
           sw.Stop();
-          Log.Information("RequestCompleted {status} {duration_ms}",
-            ctx.Response.StatusCode, sw.Elapsed.TotalMilliseconds);
+          using (Serilog.Context.LogContext.PushProperty("status", ctx.Response.StatusCode, true))
+          using (Serilog.Context.LogContext.PushProperty("duration_ms", sw.Elapsed.TotalMilliseconds, true))
+          {
+            Log.Information("RequestCompleted");
+          }
         }
         catch (Exception ex)
         {
           sw.Stop();
-          Log.Error(ex, "RequestFailed {status} {duration_ms}",
-            500, sw.Elapsed.TotalMilliseconds);
+          ctx.Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+          using (Serilog.Context.LogContext.PushProperty("status", ctx.Response.StatusCode, true))
+          using (Serilog.Context.LogContext.PushProperty("duration_ms", sw.Elapsed.TotalMilliseconds, true))
+          using (Serilog.Context.LogContext.PushProperty("error_message", ex.Message, true))
+          using (Serilog.Context.LogContext.PushProperty("error_type", ex.GetType().FullName, true))
+          {
+            Log.Error(ex, ex.Message);
+          }
           throw;
         }
       }
