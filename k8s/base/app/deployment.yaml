@@ -37,13 +37,15 @@ spec:
               path: /healthz
               port: http
             initialDelaySeconds: 5
-            periodSeconds: 10
+            periodSeconds: 300
+            timeoutSeconds: 5
           livenessProbe:
             httpGet:
               path: /healthz
               port: http
             initialDelaySeconds: 10
-            periodSeconds: 20
+            periodSeconds: 300
+            timeoutSeconds: 5
           resources:
             requests:
               cpu: 50m
