@@ -13,6 +13,10 @@ data:
           - /var/log/containers/*.log
         fields_under_root: true
         processors:
+          - drop_event:
+              when:
+                contains:
+                  message: "v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice"
           - add_host_metadata: {}
           - add_kubernetes_metadata:
               host: ${NODE_NAME}
