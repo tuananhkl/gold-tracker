@@ -3,16 +3,16 @@ kind: Deployment
 metadata:
   name: gold-tracker-api
   labels:
-    app: gold-api
+    app: gold-tracker-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: gold-api
+      app: gold-tracker-api
   template:
     metadata:
       labels:
-        app: gold-api
+        app: gold-tracker-api
     spec:
       containers:
         - name: api
