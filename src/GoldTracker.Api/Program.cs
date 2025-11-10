@@ -3,9 +3,13 @@ using GoldTracker.Application.Contracts;
 using GoldTracker.Infrastructure.DI;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Npgsql;
+using GoldTracker.Api.Logging;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddJsonFile("appsettings.Logging.json", optional: true, reloadOnChange: true);
+builder.AddSerilogLogging();
 
 // Add Docker-specific configuration if running in Docker
 var env = builder.Environment.EnvironmentName;
@@ -13,10 +17,6 @@ if (env == "Docker" || Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CON
 {
   builder.Configuration.AddJsonFile("appsettings.Docker.json", optional: true, reloadOnChange: true);
 }
-
-builder.Host.UseSerilog((ctx, lc) => lc
-  .ReadFrom.Configuration(ctx.Configuration)
-  .WriteTo.Console());
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -35,6 +35,7 @@ builder.Services.AddScheduling();
 
 var app = builder.Build();
 
+app.UseMiddleware<TraceContextMiddleware>();
 app.UseSerilogRequestLogging();
 
 // Enable Swagger in Development and Docker environments

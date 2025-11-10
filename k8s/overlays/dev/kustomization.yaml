@@ -1,13 +1,12 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: gold-dev
-resources:
-  - ../../base
 patches:
   - path: patch-api-env.yaml
   - path: patch-postgres-storage.yaml
   - path: patch-ui-nodeport.yaml
   - path: patch-service-nodeport.yaml
 resources:
+  - ../../base
   - ingress.yaml
 

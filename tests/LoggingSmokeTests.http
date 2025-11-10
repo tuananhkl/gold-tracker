@@ -1,0 +1,10 @@
+### Health
+GET http://localhost:8080/healthz
+
+### Admin scrape once (if available)
+POST http://localhost:8080/admin/scrape/doji?mode=once
+
+### Latest prices
+GET http://localhost:8080/api/prices/latest?brand=DOJI
+
+

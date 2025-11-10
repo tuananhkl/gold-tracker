@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gold-tracker-api
+  labels:
+    app: gold-tracker-api
+spec:
+  selector:
+    app: gold-tracker-api
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
+
+

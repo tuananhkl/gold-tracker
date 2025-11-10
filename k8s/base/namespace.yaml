@@ -2,4 +2,12 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: gold-dev
+  labels:
+    app.kubernetes.io/name: gold-tracker
+    app.kubernetes.io/environment: dev
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gold-dev
 

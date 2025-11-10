@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: filebeat
+  namespace: gold-dev
+  labels:
+    app: filebeat
+spec:
+  selector:
+    matchLabels:
+      app: filebeat
+  template:
+    metadata:
+      labels:
+        app: filebeat
+    spec:
+      serviceAccountName: filebeat
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: filebeat
+          image: docker.elastic.co/beats/filebeat:8.15.0
+          args: ["-e", "-strict.perms=false"]
+          env:
+            - name: ELASTIC_USER
+              valueFrom:
+                secretKeyRef:
+                  name: elastic-basic-auth
+                  key: ELASTIC_USER
+            - name: ELASTIC_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: elastic-basic-auth
+                  key: ELASTIC_PASS
+            - name: ELASTIC_HOSTS
+              valueFrom:
+                secretKeyRef:
+                  name: elastic-basic-auth
+                  key: ELASTIC_HOSTS
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          volumeMounts:
+            - name: varlibcontainers
+              mountPath: /var/log/containers
+              readOnly: true
+            - name: varlogpods
+              mountPath: /var/log/pods
+              readOnly: true
+            - name: config
+              mountPath: /usr/share/filebeat/filebeat.yml
+              subPath: filebeat.yml
+      volumes:
+        - name: varlibcontainers
+          hostPath:
+            path: /var/log/containers
+        - name: varlogpods
+          hostPath:
+            path: /var/log/pods
+        - name: config
+          configMap:
+            name: filebeat-config
+            defaultMode: 0644
+
+
