@@ -25,6 +25,17 @@ data:
               overwrite_keys: true
           - script:
               lang: javascript
+              id: message-normalize
+              source: >
+                function process(event) {
+                  var rendered = event.Get("@m");
+                  if (rendered != null) {
+                    event.Put("log_message", rendered);
+                    event.Put("message", rendered);
+                  }
+                }
+          - script:
+              lang: javascript
               id: level-normalize
               source: >
                 function process(event) {
