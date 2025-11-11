@@ -43,6 +43,10 @@ public sealed class SjcParser
       var buy = item.TryGetProperty("BuyValue", out var bv) ? bv.GetDecimal() : 0m;
       var sell = item.TryGetProperty("SellValue", out var sv) ? sv.GetDecimal() : 0m;
 
+      // SJC feed uses values scaled 10x compared to others; normalize down
+      buy = buy / 10m;
+      sell = sell / 10m;
+
       if (buy <= 0 || sell <= 0) continue;
 
       var effectiveAt = latest ?? collectedAt;

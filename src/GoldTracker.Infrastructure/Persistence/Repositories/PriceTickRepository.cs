@@ -22,7 +22,13 @@ public sealed class PriceTickRepository : IPriceTickRepository
     await conn.ExecuteAsync(
       @"INSERT INTO gold.price_tick (product_id, source_id, price_buy, price_sell, currency, collected_at, effective_at, raw_hash)
         VALUES (@ProductId, @SourceId, @PriceBuy, @PriceSell, @Currency, @CollectedAt, @EffectiveAt, @RawHash)
-        ON CONFLICT (product_id, source_id, effective_at) DO NOTHING",
+        ON CONFLICT (product_id, source_id, effective_at)
+        DO UPDATE SET
+          price_buy = EXCLUDED.price_buy,
+          price_sell = EXCLUDED.price_sell,
+          currency = EXCLUDED.currency,
+          collected_at = EXCLUDED.collected_at,
+          raw_hash = EXCLUDED.raw_hash",
       new
       {
         tick.ProductId,
