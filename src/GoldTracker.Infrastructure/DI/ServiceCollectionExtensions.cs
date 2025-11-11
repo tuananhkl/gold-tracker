@@ -10,6 +10,7 @@ using GoldTracker.Infrastructure.Scrapers.Doji;
 using GoldTracker.Infrastructure.Scheduling;
 using GoldTracker.Infrastructure.Scrapers;
 using GoldTracker.Infrastructure.Scrapers.Btmc;
+using GoldTracker.Infrastructure.Scrapers.Sjc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http;
@@ -26,6 +27,7 @@ public static class ServiceCollectionExtensions
     services.AddOptions<ScheduleOptions>().Bind(configuration.GetSection(ScheduleOptions.SectionName));
     services.AddOptions<DojiOptions>().Bind(configuration.GetSection(DojiOptions.SectionName));
     services.AddOptions<BtmcOptions>().Bind(configuration.GetSection(BtmcOptions.SectionName));
+    services.AddOptions<SjcOptions>().Bind(configuration.GetSection(SjcOptions.SectionName));
     
     // Database connection - use IOptions pattern
     services.AddOptions<DbOptions>().Bind(configuration.GetSection(DbOptions.SectionName));
@@ -90,6 +92,21 @@ public static class ServiceCollectionExtensions
     services.AddSingleton<BtmcParser>();
     services.AddScoped<IBtmcScraper, BtmcScraper>();
 
+    return services;
+  }
+
+  public static IServiceCollection AddSjcScraper(this IServiceCollection services, IConfiguration configuration)
+  {
+    services.AddHttpClient("sjc", (sp, client) =>
+    {
+      var options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<SjcOptions>>().Value;
+      client.Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds);
+      client.DefaultRequestHeaders.Add("User-Agent", "GoldTracker/1.0");
+    });
+
+    services.AddSingleton<ScraperHealthTracker>();
+    services.AddSingleton<SjcParser>();
+    services.AddScoped<ISjcScraper, SjcScraper>();
     return services;
   }
 

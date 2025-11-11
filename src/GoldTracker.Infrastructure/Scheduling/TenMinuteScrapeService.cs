@@ -3,6 +3,7 @@ using Cronos;
 using GoldTracker.Infrastructure.Config;
 using GoldTracker.Infrastructure.Scrapers.Btmc;
 using GoldTracker.Infrastructure.Scrapers.Doji;
+using GoldTracker.Infrastructure.Scrapers.Sjc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -64,6 +65,12 @@ public sealed class TenMinuteScrapeService : BackgroundService
           if (btmcScraper is not null)
           {
             await btmcScraper.RunOnceAsync(stoppingToken);
+          }
+
+          var sjcScraper = scope.ServiceProvider.GetService<ISjcScraper>();
+          if (sjcScraper is not null)
+          {
+            await sjcScraper.RunOnceAsync(stoppingToken);
           }
         }
         else

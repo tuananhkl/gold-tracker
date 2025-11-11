@@ -1,6 +1,7 @@
 using GoldTracker.Application.Contracts.Repositories;
 using GoldTracker.Infrastructure.Scrapers.Btmc;
 using GoldTracker.Infrastructure.Scrapers.Doji;
+using GoldTracker.Infrastructure.Scrapers.Sjc;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace GoldTracker.Api.Endpoints;
@@ -19,6 +20,32 @@ public static class AdminEndpoints
 
       var inserted = await scraper.RunOnceAsync(ct);
       return Results.Json(new { inserted });
+    }).WithTags("Admin");
+
+    group.MapPost("/scrape/sjc", async (string? mode, ISjcScraper scraper, CancellationToken ct) =>
+    {
+      if (mode != "once")
+        return Results.BadRequest(new { error = "mode must be 'once'" });
+
+      var inserted = await scraper.RunOnceAsync(ct);
+      return Results.Json(new { inserted });
+    }).WithTags("Admin");
+
+    group.MapGet("/scrape/sjc/health", (ISjcScraper scraper) =>
+    {
+      var h = scraper.GetHealth();
+      return Results.Json(new
+      {
+        h.LastSuccess,
+        h.LastFailure,
+        h.LastError,
+        h.ConsecutiveFailures,
+        h.LastInserted,
+        h.TotalInserted,
+        h.TotalRuns,
+        h.LastAnomalyCount,
+        h.LastAnomalySummary
+      });
     }).WithTags("Admin");
 
     group.MapPost("/scrape/btmc", async (string? mode, IBtmcScraper scraper, CancellationToken ct) =>
