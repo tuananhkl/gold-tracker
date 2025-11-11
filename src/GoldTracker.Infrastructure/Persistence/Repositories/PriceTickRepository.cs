@@ -145,8 +145,9 @@ public sealed class PriceTickRepository : IPriceTickRepository
     var parameters = new DynamicParameters();
     parameters.Add("productId", productId);
     parameters.Add("sourceId", sourceId);
-    parameters.Add("fromDate", fromDate);
-    parameters.Add("toDate", toDate);
+    // Convert DateOnly to DateTime for Dapper (PostgreSQL DATE type accepts DateTime)
+    parameters.Add("fromDate", fromDate.ToDateTime(TimeOnly.MinValue));
+    parameters.Add("toDate", toDate.ToDateTime(TimeOnly.MinValue));
 
     var results = await conn.QueryAsync<HistoryPointWithDetails>(sql, parameters);
     return results.ToList();

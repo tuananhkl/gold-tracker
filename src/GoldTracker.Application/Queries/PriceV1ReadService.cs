@@ -207,8 +207,9 @@ public sealed class PriceV1ReadService : IPriceV1Query
     var historyParams = new Dapper.DynamicParameters();
     historyParams.Add("productId", product.Id);
     historyParams.Add("sourceId", source.Id);
-    historyParams.Add("fromDate", fromDate);
-    historyParams.Add("toDate", toDate);
+    // Convert DateOnly to DateTime for Dapper (PostgreSQL DATE type accepts DateTime)
+    historyParams.Add("fromDate", fromDate.ToDateTime(TimeOnly.MinValue));
+    historyParams.Add("toDate", toDate.ToDateTime(TimeOnly.MinValue));
 
     var history = await Dapper.SqlMapper.QueryAsync<(DateTime DateUtc, decimal PriceBuyClose, decimal PriceSellClose)>(conn2, historySql, historyParams);
 
