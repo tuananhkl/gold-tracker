@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GoldTracker.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+652ed30d29acc6dba08988acee981bdf04393a51")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f8e9574e627b877c88ea9ec31f5b0abe50c45fba")]
 [assembly: System.Reflection.AssemblyProductAttribute("GoldTracker.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GoldTracker.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

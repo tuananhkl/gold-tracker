@@ -66,3 +66,15 @@
 /home/derrick/gold-tracker/src/GoldTracker.Api/obj/Debug/net8.0/GoldTracker.Api.pdb
 /home/derrick/gold-tracker/src/GoldTracker.Api/obj/Debug/net8.0/GoldTracker.Api.genruntimeconfig.cache
 /home/derrick/gold-tracker/src/GoldTracker.Api/obj/Debug/net8.0/ref/GoldTracker.Api.dll
+/home/derrick/gold-tracker/src/GoldTracker.Api/bin/Debug/net8.0/appsettings.Docker.json
+/home/derrick/gold-tracker/src/GoldTracker.Api/bin/Debug/net8.0/appsettings.Logging.json
+/home/derrick/gold-tracker/src/GoldTracker.Api/bin/Debug/net8.0/AngleSharp.dll
+/home/derrick/gold-tracker/src/GoldTracker.Api/bin/Debug/net8.0/Cronos.dll
+/home/derrick/gold-tracker/src/GoldTracker.Api/bin/Debug/net8.0/Dapper.dll
+/home/derrick/gold-tracker/src/GoldTracker.Api/bin/Debug/net8.0/Microsoft.Extensions.Configuration.dll
+/home/derrick/gold-tracker/src/GoldTracker.Api/bin/Debug/net8.0/Microsoft.Extensions.Diagnostics.dll
+/home/derrick/gold-tracker/src/GoldTracker.Api/bin/Debug/net8.0/Microsoft.Extensions.Http.dll
+/home/derrick/gold-tracker/src/GoldTracker.Api/bin/Debug/net8.0/Npgsql.dll
+/home/derrick/gold-tracker/src/GoldTracker.Api/bin/Debug/net8.0/Polly.dll
+/home/derrick/gold-tracker/src/GoldTracker.Api/bin/Debug/net8.0/Polly.Extensions.Http.dll
+/home/derrick/gold-tracker/src/GoldTracker.Api/obj/Debug/net8.0/GoldTracker.Api.sourcelink.json

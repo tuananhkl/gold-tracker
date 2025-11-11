@@ -8,6 +8,8 @@ using GoldTracker.Infrastructure.Persistence;
 using GoldTracker.Infrastructure.Persistence.Repositories;
 using GoldTracker.Infrastructure.Scrapers.Doji;
 using GoldTracker.Infrastructure.Scheduling;
+using GoldTracker.Infrastructure.Scrapers;
+using GoldTracker.Infrastructure.Scrapers.Btmc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http;
@@ -23,6 +25,7 @@ public static class ServiceCollectionExtensions
     services.AddOptions<SourceOptions>().Bind(configuration.GetSection(SourceOptions.SectionName));
     services.AddOptions<ScheduleOptions>().Bind(configuration.GetSection(ScheduleOptions.SectionName));
     services.AddOptions<DojiOptions>().Bind(configuration.GetSection(DojiOptions.SectionName));
+    services.AddOptions<BtmcOptions>().Bind(configuration.GetSection(BtmcOptions.SectionName));
     
     // Database connection - use IOptions pattern
     services.AddOptions<DbOptions>().Bind(configuration.GetSection(DbOptions.SectionName));
@@ -70,6 +73,22 @@ public static class ServiceCollectionExtensions
 
     services.AddSingleton<DojiParser>();
     services.AddScoped<IDojiScraper, DojiScraper>();
+
+    return services;
+  }
+
+  public static IServiceCollection AddBtmcScraper(this IServiceCollection services, IConfiguration configuration)
+  {
+    services.AddHttpClient("btmc", (sp, client) =>
+    {
+      var options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<BtmcOptions>>().Value;
+      client.Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds);
+      client.DefaultRequestHeaders.Add("User-Agent", "GoldTracker/1.0");
+    });
+
+    services.AddSingleton<ScraperHealthTracker>();
+    services.AddSingleton<BtmcParser>();
+    services.AddScoped<IBtmcScraper, BtmcScraper>();
 
     return services;
   }

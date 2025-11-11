@@ -1,26 +1,28 @@
 using System.Globalization;
 using Cronos;
 using GoldTracker.Infrastructure.Config;
+using GoldTracker.Infrastructure.Scrapers.Btmc;
 using GoldTracker.Infrastructure.Scrapers.Doji;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GoldTracker.Infrastructure.Scheduling;
 
 public sealed class TenMinuteScrapeService : BackgroundService
 {
-  private readonly IDojiScraper _scraper;
+  private readonly IServiceProvider _serviceProvider;
   private readonly ScheduleOptions _scheduleOptions;
   private readonly ILogger<TenMinuteScrapeService> _logger;
   private readonly TimeZoneInfo _timeZone;
 
   public TenMinuteScrapeService(
-    IDojiScraper scraper,
+    IServiceProvider serviceProvider,
     IOptions<ScheduleOptions> scheduleOptions,
     ILogger<TenMinuteScrapeService> logger)
   {
-    _scraper = scraper;
+    _serviceProvider = serviceProvider;
     _scheduleOptions = scheduleOptions.Value;
     _logger = logger;
     _timeZone = TimeZoneInfo.FindSystemTimeZoneById(
@@ -50,8 +52,19 @@ public sealed class TenMinuteScrapeService : BackgroundService
 
         if (TimeWindow.IsInWindow(localTimeOnly, windowStart, windowEnd))
         {
-          _logger.LogInformation("Running scheduled DOJI scrape at {LocalTime}", localTime);
-          await _scraper.RunOnceAsync(stoppingToken);
+          _logger.LogInformation("Running scheduled scrapers at {LocalTime}", localTime);
+          using var scope = _serviceProvider.CreateScope();
+          var dojiScraper = scope.ServiceProvider.GetService<IDojiScraper>();
+          if (dojiScraper is not null)
+          {
+            await dojiScraper.RunOnceAsync(stoppingToken);
+          }
+
+          var btmcScraper = scope.ServiceProvider.GetService<IBtmcScraper>();
+          if (btmcScraper is not null)
+          {
+            await btmcScraper.RunOnceAsync(stoppingToken);
+          }
         }
         else
         {

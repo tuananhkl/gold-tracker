@@ -9,3 +9,4 @@
 /home/derrick/gold-tracker/src/GoldTracker.Domain/obj/Debug/net8.0/refint/GoldTracker.Domain.dll
 /home/derrick/gold-tracker/src/GoldTracker.Domain/obj/Debug/net8.0/GoldTracker.Domain.pdb
 /home/derrick/gold-tracker/src/GoldTracker.Domain/obj/Debug/net8.0/ref/GoldTracker.Domain.dll
+/home/derrick/gold-tracker/src/GoldTracker.Domain/obj/Debug/net8.0/GoldTracker.Domain.sourcelink.json

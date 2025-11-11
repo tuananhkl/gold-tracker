@@ -1,0 +1,6 @@
+{
+  "GoldTracker.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/home\/derrick\/gold-tracker\/src\/GoldTracker.Api",
+  "GoldTracker.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/home\/derrick\/gold-tracker\/src\/GoldTracker.Application",
+  "GoldTracker.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/home\/derrick\/gold-tracker\/src\/GoldTracker.Domain",
+  "GoldTracker.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/home\/derrick\/gold-tracker\/src\/GoldTracker.Infrastructure"
+}

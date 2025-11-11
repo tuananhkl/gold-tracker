@@ -13,3 +13,4 @@
 /home/derrick/gold-tracker/src/GoldTracker.Application/obj/Debug/net8.0/refint/GoldTracker.Application.dll
 /home/derrick/gold-tracker/src/GoldTracker.Application/obj/Debug/net8.0/GoldTracker.Application.pdb
 /home/derrick/gold-tracker/src/GoldTracker.Application/obj/Debug/net8.0/ref/GoldTracker.Application.dll
+/home/derrick/gold-tracker/src/GoldTracker.Application/obj/Debug/net8.0/GoldTracker.Application.sourcelink.json
