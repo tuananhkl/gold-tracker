@@ -2,6 +2,7 @@ using GoldTracker.Application.Contracts.Repositories;
 using GoldTracker.Infrastructure.Scrapers.Btmc;
 using GoldTracker.Infrastructure.Scrapers.Doji;
 using GoldTracker.Infrastructure.Scrapers.Sjc;
+using GoldTracker.Infrastructure.Scrapers.PhucThanh;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace GoldTracker.Api.Endpoints;
@@ -45,6 +46,33 @@ public static class AdminEndpoints
         h.TotalRuns,
         h.LastAnomalyCount,
         h.LastAnomalySummary
+      });
+    }).WithTags("Admin");
+
+    // PhucThanh
+    group.MapPost("/scrape/phucthanh", async (string? mode, IPhucThanhScraper scraper, CancellationToken ct) =>
+    {
+      if (mode != "once")
+        return Results.BadRequest(new { error = "mode must be 'once'" });
+
+      var inserted = await scraper.RunOnceAsync(ct);
+      return Results.Json(new { inserted });
+    }).WithTags("Admin");
+
+    group.MapGet("/scrape/phucthanh/health", (IPhucThanhScraper scraper) =>
+    {
+      var health = scraper.GetHealth();
+      return Results.Json(new
+      {
+        health.LastSuccess,
+        health.LastFailure,
+        health.LastError,
+        health.ConsecutiveFailures,
+        health.LastInserted,
+        health.TotalInserted,
+        health.TotalRuns,
+        health.LastAnomalyCount,
+        health.LastAnomalySummary
       });
     }).WithTags("Admin");
 

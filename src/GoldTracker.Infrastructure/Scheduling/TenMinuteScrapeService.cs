@@ -72,6 +72,12 @@ public sealed class TenMinuteScrapeService : BackgroundService
           {
             await sjcScraper.RunOnceAsync(stoppingToken);
           }
+
+      var ptScraper = scope.ServiceProvider.GetService<GoldTracker.Infrastructure.Scrapers.PhucThanh.IPhucThanhScraper>();
+      if (ptScraper is not null)
+      {
+        await ptScraper.RunOnceAsync(stoppingToken);
+      }
         }
         else
         {

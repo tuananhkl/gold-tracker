@@ -110,6 +110,24 @@ public static class ServiceCollectionExtensions
     return services;
   }
 
+  public static IServiceCollection AddPhucThanhScraper(this IServiceCollection services, IConfiguration configuration)
+  {
+    services.AddOptions<GoldTracker.Infrastructure.Scrapers.PhucThanh.PhucThanhOptions>()
+      .Bind(configuration.GetSection(GoldTracker.Infrastructure.Scrapers.PhucThanh.PhucThanhOptions.SectionName));
+
+    services.AddHttpClient("phucthanh", (sp, client) =>
+    {
+      var options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<GoldTracker.Infrastructure.Scrapers.PhucThanh.PhucThanhOptions>>().Value;
+      client.Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds);
+      client.DefaultRequestHeaders.Add("User-Agent", "GoldTracker/1.0");
+    });
+
+    services.AddSingleton<ScraperHealthTracker>();
+    services.AddSingleton<GoldTracker.Infrastructure.Scrapers.PhucThanh.PhucThanhParser>();
+    services.AddScoped<GoldTracker.Infrastructure.Scrapers.PhucThanh.IPhucThanhScraper, GoldTracker.Infrastructure.Scrapers.PhucThanh.PhucThanhScraper>();
+    return services;
+  }
+
   public static IServiceCollection AddScheduling(this IServiceCollection services)
   {
     var scraperEnabled = bool.Parse(Environment.GetEnvironmentVariable("SCRAPER_ENABLED") ?? "false");

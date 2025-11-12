@@ -33,6 +33,7 @@ builder.Services.AddGoldTrackerCore(builder.Configuration);
 builder.Services.AddDojiScraper(builder.Configuration);
 builder.Services.AddBtmcScraper(builder.Configuration);
 builder.Services.AddSjcScraper(builder.Configuration);
+builder.Services.AddPhucThanhScraper(builder.Configuration);
 builder.Services.AddScheduling();
 
 var app = builder.Build();
