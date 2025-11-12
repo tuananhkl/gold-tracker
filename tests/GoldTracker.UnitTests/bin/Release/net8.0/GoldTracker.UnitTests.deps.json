@@ -621,28 +621,7 @@
           }
         }
       },
-      "System.Diagnostics.EventLog/6.0.0": {
-        "runtime": {
-          "lib/net6.0/System.Diagnostics.EventLog.dll": {
-            "assemblyVersion": "6.0.0.0",
-            "fileVersion": "6.0.21.52210"
-          }
-        },
-        "runtimeTargets": {
-          "runtimes/win/lib/net6.0/System.Diagnostics.EventLog.Messages.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "6.0.0.0",
-            "fileVersion": "6.0.21.52210"
-          },
-          "runtimes/win/lib/net6.0/System.Diagnostics.EventLog.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "6.0.0.0",
-            "fileVersion": "6.0.21.52210"
-          }
-        }
-      },
+      "System.Diagnostics.EventLog/6.0.0": {},
       "System.Diagnostics.Tracing/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.1.0",
@@ -791,6 +770,7 @@
           "System.Runtime": "4.3.0"
         }
       },
+      "System.Text.Json/8.0.5": {},
       "System.Threading/4.3.0": {
         "dependencies": {
           "System.Runtime": "4.3.0",
@@ -802,6 +782,18 @@
           "Microsoft.NETCore.Platforms": "1.1.0",
           "Microsoft.NETCore.Targets": "1.1.0",
           "System.Runtime": "4.3.0"
+        }
+      },
+      "Telegram.Bot/22.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "9.0.10",
+          "System.Text.Json": "8.0.5"
+        },
+        "runtime": {
+          "lib/net6.0/Telegram.Bot.dll": {
+            "assemblyVersion": "22.0.0.0",
+            "fileVersion": "22.0.0.0"
+          }
         }
       },
       "xunit/2.9.2": {
@@ -892,7 +884,8 @@
           "Microsoft.Extensions.Options": "9.0.10",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "9.0.10",
           "Npgsql": "9.0.4",
-          "Polly.Extensions.Http": "3.0.0"
+          "Polly.Extensions.Http": "3.0.0",
+          "Telegram.Bot": "22.0.0"
         },
         "runtime": {
           "GoldTracker.Infrastructure.dll": {
@@ -1371,6 +1364,13 @@
       "path": "system.text.encoding/4.3.0",
       "hashPath": "system.text.encoding.4.3.0.nupkg.sha512"
     },
+    "System.Text.Json/8.0.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0f1B50Ss7rqxXiaBJyzUu9bWFOO2/zSlifZ/UNMdiIpDYe4cY4LQQicP4nirK1OS31I43rn062UIJ1Q9bpmHpg==",
+      "path": "system.text.json/8.0.5",
+      "hashPath": "system.text.json.8.0.5.nupkg.sha512"
+    },
     "System.Threading/4.3.0": {
       "type": "package",
       "serviceable": true,
@@ -1384,6 +1384,13 @@
       "sha512": "sha512-LbSxKEdOUhVe8BezB/9uOGGppt+nZf6e1VFyw6v3DN6lqitm0OSn2uXMOdtP0M3W4iMcqcivm2J6UgqiwwnXiA==",
       "path": "system.threading.tasks/4.3.0",
       "hashPath": "system.threading.tasks.4.3.0.nupkg.sha512"
+    },
+    "Telegram.Bot/22.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-S6AmptLXByejOwG5xWzqY7DaV22BQoB6RP3zLfXuJ7i/OKVnCh+6mHFiCtq4DNYGjiU0YAmpT1KWnWc8nR/YDw==",
+      "path": "telegram.bot/22.0.0",
+      "hashPath": "telegram.bot.22.0.0.nupkg.sha512"
     },
     "xunit/2.9.2": {
       "type": "package",

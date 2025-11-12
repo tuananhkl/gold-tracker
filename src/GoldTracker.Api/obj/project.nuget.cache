@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "XqneB26X0sQ=",
+  "dgSpecHash": "c/qGJLJQ2Hc=",
   "success": true,
   "projectFilePath": "/home/derrick/gold-tracker/src/GoldTracker.Api/GoldTracker.Api.csproj",
   "expectedPackageFiles": [
@@ -81,6 +81,7 @@
     "/home/derrick/.nuget/packages/system.text.json/9.0.0/system.text.json.9.0.0.nupkg.sha512",
     "/home/derrick/.nuget/packages/system.threading/4.3.0/system.threading.4.3.0.nupkg.sha512",
     "/home/derrick/.nuget/packages/system.threading.tasks/4.3.0/system.threading.tasks.4.3.0.nupkg.sha512",
+    "/home/derrick/.nuget/packages/telegram.bot/22.0.0/telegram.bot.22.0.0.nupkg.sha512",
     "/home/derrick/.nuget/packages/microsoft.netcore.app.host.linux-x64/8.0.19/microsoft.netcore.app.host.linux-x64.8.0.19.nupkg.sha512"
   ],
   "logs": []

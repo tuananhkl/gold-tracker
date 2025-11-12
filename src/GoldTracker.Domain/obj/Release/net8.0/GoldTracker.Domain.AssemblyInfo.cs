@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GoldTracker.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5933b6424d2413d88447f2119277ec62be964b52")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b879cbc92b28f19ae547ad02a4dc66dc65ee3c43")]
 [assembly: System.Reflection.AssemblyProductAttribute("GoldTracker.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GoldTracker.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

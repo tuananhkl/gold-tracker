@@ -265,3 +265,4 @@
 /home/derrick/gold-tracker/tests/GoldTracker.IntegrationTests/bin/Release/net8.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.resources.dll
 /home/derrick/gold-tracker/tests/GoldTracker.IntegrationTests/bin/Release/net8.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.resources.dll
 /home/derrick/gold-tracker/tests/GoldTracker.IntegrationTests/obj/Release/net8.0/GoldTracker.IntegrationTests.sourcelink.json
+/home/derrick/gold-tracker/tests/GoldTracker.IntegrationTests/bin/Release/net8.0/Telegram.Bot.dll

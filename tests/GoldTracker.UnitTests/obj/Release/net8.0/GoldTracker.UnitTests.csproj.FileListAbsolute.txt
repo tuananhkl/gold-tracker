@@ -103,9 +103,6 @@
 /home/derrick/gold-tracker/tests/GoldTracker.UnitTests/obj/Release/net8.0/ref/GoldTracker.UnitTests.dll
 /home/derrick/gold-tracker/tests/GoldTracker.UnitTests/bin/Release/net8.0/Castle.Core.dll
 /home/derrick/gold-tracker/tests/GoldTracker.UnitTests/bin/Release/net8.0/Moq.dll
-/home/derrick/gold-tracker/tests/GoldTracker.UnitTests/bin/Release/net8.0/System.Diagnostics.EventLog.dll
-/home/derrick/gold-tracker/tests/GoldTracker.UnitTests/bin/Release/net8.0/runtimes/win/lib/net6.0/System.Diagnostics.EventLog.Messages.dll
-/home/derrick/gold-tracker/tests/GoldTracker.UnitTests/bin/Release/net8.0/runtimes/win/lib/net6.0/System.Diagnostics.EventLog.dll
 /home/derrick/gold-tracker/tests/GoldTracker.UnitTests/bin/Release/net8.0/AngleSharp.dll
 /home/derrick/gold-tracker/tests/GoldTracker.UnitTests/bin/Release/net8.0/Cronos.dll
 /home/derrick/gold-tracker/tests/GoldTracker.UnitTests/bin/Release/net8.0/Dapper.dll
@@ -131,3 +128,4 @@
 /home/derrick/gold-tracker/tests/GoldTracker.UnitTests/bin/Release/net8.0/GoldTracker.Infrastructure.dll
 /home/derrick/gold-tracker/tests/GoldTracker.UnitTests/bin/Release/net8.0/GoldTracker.Infrastructure.pdb
 /home/derrick/gold-tracker/tests/GoldTracker.UnitTests/obj/Release/net8.0/GoldTracker.UnitTests.sourcelink.json
+/home/derrick/gold-tracker/tests/GoldTracker.UnitTests/bin/Release/net8.0/Telegram.Bot.dll

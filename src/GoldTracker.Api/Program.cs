@@ -35,6 +35,7 @@ builder.Services.AddBtmcScraper(builder.Configuration);
 builder.Services.AddSjcScraper(builder.Configuration);
 builder.Services.AddPhucThanhScraper(builder.Configuration);
 builder.Services.AddScheduling();
+builder.Services.AddAlerts(builder.Configuration);
 
 var app = builder.Build();
 

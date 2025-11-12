@@ -2362,6 +2362,18 @@
           "System.Xml.ReaderWriter": "4.3.0"
         }
       },
+      "Telegram.Bot/22.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "9.0.10",
+          "System.Text.Json": "8.0.5"
+        },
+        "runtime": {
+          "lib/net6.0/Telegram.Bot.dll": {
+            "assemblyVersion": "22.0.0.0",
+            "fileVersion": "22.0.0.0"
+          }
+        }
+      },
       "Testcontainers/4.8.1": {
         "dependencies": {
           "Docker.DotNet.Enhanced": "3.129.0",
@@ -2657,7 +2669,8 @@
           "Microsoft.Extensions.Options": "9.0.10",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "9.0.10",
           "Npgsql": "9.0.4",
-          "Polly.Extensions.Http": "3.0.0"
+          "Polly.Extensions.Http": "3.0.0",
+          "Telegram.Bot": "22.0.0"
         },
         "runtime": {
           "GoldTracker.Infrastructure.dll": {
@@ -4143,6 +4156,13 @@
       "sha512": "sha512-lJ8AxvkX7GQxpC6GFCeBj8ThYVyQczx2+f/cWHJU8tjS7YfI6Cv6bon70jVEgs2CiFbmmM8b9j1oZVx0dSI2Ww==",
       "path": "system.xml.xmldocument/4.3.0",
       "hashPath": "system.xml.xmldocument.4.3.0.nupkg.sha512"
+    },
+    "Telegram.Bot/22.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-S6AmptLXByejOwG5xWzqY7DaV22BQoB6RP3zLfXuJ7i/OKVnCh+6mHFiCtq4DNYGjiU0YAmpT1KWnWc8nR/YDw==",
+      "path": "telegram.bot/22.0.0",
+      "hashPath": "telegram.bot.22.0.0.nupkg.sha512"
     },
     "Testcontainers/4.8.1": {
       "type": "package",

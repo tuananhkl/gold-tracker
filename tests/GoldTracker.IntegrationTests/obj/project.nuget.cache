@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "rgne4QOzf1Y=",
+  "dgSpecHash": "D/IXfhwcH0g=",
   "success": true,
   "projectFilePath": "/home/derrick/gold-tracker/tests/GoldTracker.IntegrationTests/GoldTracker.IntegrationTests.csproj",
   "expectedPackageFiles": [
@@ -214,6 +214,7 @@
     "/home/derrick/.nuget/packages/system.xml.readerwriter/4.3.0/system.xml.readerwriter.4.3.0.nupkg.sha512",
     "/home/derrick/.nuget/packages/system.xml.xdocument/4.3.0/system.xml.xdocument.4.3.0.nupkg.sha512",
     "/home/derrick/.nuget/packages/system.xml.xmldocument/4.3.0/system.xml.xmldocument.4.3.0.nupkg.sha512",
+    "/home/derrick/.nuget/packages/telegram.bot/22.0.0/telegram.bot.22.0.0.nupkg.sha512",
     "/home/derrick/.nuget/packages/testcontainers/4.8.1/testcontainers.4.8.1.nupkg.sha512",
     "/home/derrick/.nuget/packages/testcontainers.postgresql/4.8.1/testcontainers.postgresql.4.8.1.nupkg.sha512",
     "/home/derrick/.nuget/packages/tinymapper.signed/4.0.0/tinymapper.signed.4.0.0.nupkg.sha512",

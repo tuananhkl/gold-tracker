@@ -1,8 +1,10 @@
 using GoldTracker.Application.Contracts;
+using GoldTracker.Application.Contracts.Alerts;
 using GoldTracker.Application.Contracts.Repositories;
 using GoldTracker.Application.Queries;
 using GoldTracker.Application.Services;
 using GoldTracker.Domain.Normalization;
+using GoldTracker.Infrastructure.Alerts;
 using GoldTracker.Infrastructure.Config;
 using GoldTracker.Infrastructure.Persistence;
 using GoldTracker.Infrastructure.Persistence.Repositories;
@@ -28,6 +30,21 @@ public static class ServiceCollectionExtensions
     services.AddOptions<DojiOptions>().Bind(configuration.GetSection(DojiOptions.SectionName));
     services.AddOptions<BtmcOptions>().Bind(configuration.GetSection(BtmcOptions.SectionName));
     services.AddOptions<SjcOptions>().Bind(configuration.GetSection(SjcOptions.SectionName));
+    services.AddOptions<AlertsOptions>().Bind(configuration.GetSection(AlertsOptions.SectionName));
+    services.AddOptions<TelegramOptions>().Bind(configuration.GetSection(TelegramOptions.SectionName))
+      .PostConfigure(opts =>
+      {
+        // Override from env vars if present
+        opts.BotToken = Environment.GetEnvironmentVariable("TELEGRAM_BOT_TOKEN") ?? opts.BotToken;
+        opts.DefaultChatId = Environment.GetEnvironmentVariable("TELEGRAM_DEFAULT_CHAT_ID") ?? opts.DefaultChatId;
+      });
+    services.AddOptions<ElasticsearchOptions>().Bind(configuration.GetSection(ElasticsearchOptions.SectionName))
+      .PostConfigure(opts =>
+      {
+        opts.BaseUrl = Environment.GetEnvironmentVariable("ELASTICSEARCH__BASEURL") ?? opts.BaseUrl;
+        opts.Username = Environment.GetEnvironmentVariable("ELASTICSEARCH__USERNAME") ?? opts.Username;
+        opts.Password = Environment.GetEnvironmentVariable("ELASTICSEARCH__PASSWORD") ?? opts.Password;
+      });
     
     // Database connection - use IOptions pattern
     services.AddOptions<DbOptions>().Bind(configuration.GetSection(DbOptions.SectionName));
@@ -45,6 +62,7 @@ public static class ServiceCollectionExtensions
     services.AddScoped<IProductRepository, ProductRepository>();
     services.AddScoped<IPriceTickRepository, PriceTickRepository>();
     services.AddScoped<IDailySnapshotRepository, DailySnapshotRepository>();
+    services.AddScoped<IAlertEventRepository, AlertEventRepository>();
 
     // Normalizer
     services.AddScoped<IPriceNormalizer, PriceNormalizer>();
@@ -125,6 +143,47 @@ public static class ServiceCollectionExtensions
     services.AddSingleton<ScraperHealthTracker>();
     services.AddSingleton<GoldTracker.Infrastructure.Scrapers.PhucThanh.PhucThanhParser>();
     services.AddScoped<GoldTracker.Infrastructure.Scrapers.PhucThanh.IPhucThanhScraper, GoldTracker.Infrastructure.Scrapers.PhucThanh.PhucThanhScraper>();
+    return services;
+  }
+
+  public static IServiceCollection AddAlerts(this IServiceCollection services, IConfiguration configuration)
+  {
+    // HTTP client for Elasticsearch
+    services.AddHttpClient("elasticsearch", (sp, client) =>
+    {
+      var options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<ElasticsearchOptions>>().Value;
+      client.BaseAddress = new Uri(options.BaseUrl);
+      client.Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds);
+      if (!string.IsNullOrEmpty(options.Username) && !string.IsNullOrEmpty(options.Password))
+      {
+        var auth = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes($"{options.Username}:{options.Password}"));
+        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", auth);
+      }
+    });
+
+    // Alert services
+    services.AddScoped<IPriceWindowReader, PriceWindowReader>();
+    services.AddScoped<IScraperHealthReader, ScraperHealthReader>();
+    services.AddScoped<IAlertEvaluator, AlertEvaluator>();
+    services.AddScoped<ITelegramNotifier, TelegramNotifier>();
+
+    // Background services
+    var alertsEnabled = bool.Parse(Environment.GetEnvironmentVariable("ALERTS_ENABLED") ?? 
+      configuration.GetValue<string>("Alerts:Enabled") ?? "true");
+    var telegramEnabled = bool.Parse(Environment.GetEnvironmentVariable("TELEGRAM_ENABLED") ?? 
+      configuration.GetValue<string>("Telegram:Enabled") ?? "true");
+
+    if (alertsEnabled)
+    {
+      services.AddHostedService<AlertsPollingService>();
+      services.AddHostedService<DailyBriefService>();
+    }
+
+    if (telegramEnabled)
+    {
+      services.AddHostedService<TelegramBotHostedService>();
+    }
+
     return services;
   }
 

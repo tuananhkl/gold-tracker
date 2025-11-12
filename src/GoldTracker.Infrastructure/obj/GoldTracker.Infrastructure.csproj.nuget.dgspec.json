@@ -232,6 +232,10 @@
             "Polly.Extensions.Http": {
               "target": "Package",
               "version": "[3.0.0, )"
+            },
+            "Telegram.Bot": {
+              "target": "Package",
+              "version": "[22.0.0, )"
             }
           },
           "imports": [

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "DPChRKZ0tg4=",
+  "dgSpecHash": "/UIBUs6UKnQ=",
   "success": true,
   "projectFilePath": "/home/derrick/gold-tracker/src/GoldTracker.Infrastructure/GoldTracker.Infrastructure.csproj",
   "expectedPackageFiles": [
@@ -60,8 +60,10 @@
     "/home/derrick/.nuget/packages/system.security.cryptography.encoding/4.3.0/system.security.cryptography.encoding.4.3.0.nupkg.sha512",
     "/home/derrick/.nuget/packages/system.security.cryptography.primitives/4.3.0/system.security.cryptography.primitives.4.3.0.nupkg.sha512",
     "/home/derrick/.nuget/packages/system.text.encoding/4.3.0/system.text.encoding.4.3.0.nupkg.sha512",
+    "/home/derrick/.nuget/packages/system.text.json/8.0.5/system.text.json.8.0.5.nupkg.sha512",
     "/home/derrick/.nuget/packages/system.threading/4.3.0/system.threading.4.3.0.nupkg.sha512",
-    "/home/derrick/.nuget/packages/system.threading.tasks/4.3.0/system.threading.tasks.4.3.0.nupkg.sha512"
+    "/home/derrick/.nuget/packages/system.threading.tasks/4.3.0/system.threading.tasks.4.3.0.nupkg.sha512",
+    "/home/derrick/.nuget/packages/telegram.bot/22.0.0/telegram.bot.22.0.0.nupkg.sha512"
   ],
   "logs": []
 }
