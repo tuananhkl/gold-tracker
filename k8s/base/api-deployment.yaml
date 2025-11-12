@@ -27,8 +27,29 @@ spec:
               value: "false"
             - name: SNAPSHOT_ENABLED
               value: "false"
+            - name: ALERTS_ENABLED
+              value: "true"
+            - name: TELEGRAM_ENABLED
+              value: "true"
+            - name: Alerts__Enabled
+              value: "true"
+            - name: Alerts__PriceJumpPercent
+              value: "2.0"
+            - name: Alerts__NoDataMinutes
+              value: "20"
+            - name: Alerts__Timezone
+              value: "Asia/Ho_Chi_Minh"
+            - name: Telegram__Enabled
+              value: "true"
+            - name: Elasticsearch__Enabled
+              value: "true"
+            - name: Elasticsearch__BaseUrl
+              value: "https://192.168.31.156:9200"
+            - name: Elasticsearch__IndexLogs
+              value: "gold-tracker-api-application-*"
           envFrom:
             - configMapRef: { name: gold-app-config }
+            - secretRef: { name: telegram-secret }
           readinessProbe:
             httpGet: { path: /healthz, port: http }
             initialDelaySeconds: 5

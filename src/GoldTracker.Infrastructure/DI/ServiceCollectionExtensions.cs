@@ -176,7 +176,12 @@ public static class ServiceCollectionExtensions
     if (alertsEnabled)
     {
       services.AddHostedService<AlertsPollingService>();
-      services.AddHostedService<DailyBriefService>();
+      services.AddSingleton<DailyBriefService>();
+      services.AddHostedService(sp => sp.GetRequiredService<DailyBriefService>());
+    }
+    else
+    {
+      services.AddSingleton<DailyBriefService>();
     }
 
     if (telegramEnabled)

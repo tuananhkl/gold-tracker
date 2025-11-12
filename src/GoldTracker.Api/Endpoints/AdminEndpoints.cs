@@ -6,6 +6,7 @@ using GoldTracker.Infrastructure.Scrapers.Sjc;
 using GoldTracker.Infrastructure.Scrapers.PhucThanh;
 using GoldTracker.Infrastructure.Scheduling;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GoldTracker.Api.Endpoints;
 
@@ -126,10 +127,11 @@ public static class AdminEndpoints
     }).WithTags("Admin");
 
     // POST /admin/alerts/evaluate
-    group.MapPost("/alerts/evaluate", async (IAlertEvaluator evaluator, GoldTracker.Infrastructure.Config.AlertsOptions options, CancellationToken ct) =>
+    group.MapPost("/alerts/evaluate", async (IAlertEvaluator evaluator, Microsoft.Extensions.Options.IOptions<GoldTracker.Infrastructure.Config.AlertsOptions> options, CancellationToken ct) =>
     {
-      var priceJump = await evaluator.EvaluatePriceJumpAsync(options.PriceJumpPercent, ct);
-      var noData = await evaluator.EvaluateNoDataAsync(options.NoDataMinutes, ct);
+      var alertOptions = options.Value;
+      var priceJump = await evaluator.EvaluatePriceJumpAsync(alertOptions.PriceJumpPercent, ct);
+      var noData = await evaluator.EvaluateNoDataAsync(alertOptions.NoDataMinutes, ct);
       var scraperErrors = await evaluator.EvaluateScraperErrorsAsync(ct);
       
       return Results.Json(new
@@ -146,15 +148,17 @@ public static class AdminEndpoints
       IAlertEvaluator evaluator,
       ITelegramNotifier notifier,
       IAlertEventRepository alertRepo,
-      GoldTracker.Infrastructure.Config.AlertsOptions alertsOptions,
+      Microsoft.Extensions.Options.IOptions<GoldTracker.Infrastructure.Config.AlertsOptions> alertsOptions,
       Microsoft.Extensions.Options.IOptions<GoldTracker.Infrastructure.Config.TelegramOptions> telegramOptions,
       CancellationToken ct) =>
     {
-      if (!telegramOptions.Value.Enabled || string.IsNullOrEmpty(telegramOptions.Value.DefaultChatId))
+      var telegram = telegramOptions.Value;
+      if (!telegram.Enabled || string.IsNullOrEmpty(telegram.DefaultChatId))
         return Results.BadRequest(new { error = "Telegram not enabled or chat ID not configured" });
 
-      var priceJump = await evaluator.EvaluatePriceJumpAsync(alertsOptions.PriceJumpPercent, ct);
-      var noData = await evaluator.EvaluateNoDataAsync(alertsOptions.NoDataMinutes, ct);
+      var alerts = alertsOptions.Value;
+      var priceJump = await evaluator.EvaluatePriceJumpAsync(alerts.PriceJumpPercent, ct);
+      var noData = await evaluator.EvaluateNoDataAsync(alerts.NoDataMinutes, ct);
       var scraperErrors = await evaluator.EvaluateScraperErrorsAsync(ct);
       
       var allCandidates = priceJump.Concat(noData).Concat(scraperErrors).ToList();
@@ -172,7 +176,7 @@ public static class AdminEndpoints
           }
 
           var message = FormatAlertMessage(candidate);
-          await notifier.SendTextAsync(telegramOptions.Value.DefaultChatId, message, ct);
+          await notifier.SendTextAsync(telegram.DefaultChatId, message, ct);
           
           var alertEvent = new GoldTracker.Domain.Alerts.AlertEvent
           {
@@ -199,7 +203,7 @@ public static class AdminEndpoints
 
     // POST /admin/brief/today
     group.MapPost("/brief/today", async (
-      DailyBriefService briefService,
+      [FromServices] DailyBriefService briefService,
       CancellationToken ct) =>
     {
       await briefService.SendDailyBriefAsync(ct);
@@ -215,8 +219,14 @@ public static class AdminEndpoints
       "warn" => "⚠️",
       _ => "ℹ️"
     };
-    
-    var escaped = candidate.Message
+
+    var kindEscaped = EscapeMarkdown(candidate.Kind);
+    var escaped = EscapeMarkdown(candidate.Message);
+
+    return $"{emoji} *Alert: {kindEscaped}*\n\n{escaped}";
+  }
+
+  private static string EscapeMarkdown(string value) => value
       .Replace("_", "\\_")
       .Replace("*", "\\*")
       .Replace("[", "\\[")
@@ -235,8 +245,6 @@ public static class AdminEndpoints
       .Replace("}", "\\}")
       .Replace(".", "\\.")
       .Replace("!", "\\!");
-
-    return $"{emoji} *Alert: {candidate.Kind}*\n\n{escaped}";
-  }
 }
+
 

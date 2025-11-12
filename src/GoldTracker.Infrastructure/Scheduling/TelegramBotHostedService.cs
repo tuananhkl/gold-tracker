@@ -30,7 +30,7 @@ public sealed class TelegramBotHostedService : BackgroundService
 
   protected override async Task ExecuteAsync(CancellationToken stoppingToken)
   {
-    if (!_options.Enabled || string.IsNullOrEmpty(_options.BotToken))
+    if (!IsConfigured(_options))
     {
       _logger.LogInformation("Telegram bot is disabled or token not configured");
       return;
@@ -56,4 +56,8 @@ public sealed class TelegramBotHostedService : BackgroundService
     // Keep service running
     await Task.Delay(Timeout.Infinite, stoppingToken);
   }
+  private static bool IsConfigured(TelegramOptions options) =>
+    options.Enabled &&
+    !string.IsNullOrWhiteSpace(options.BotToken) && options.BotToken != "__FROM_ENV__";
+
 }

@@ -10,7 +10,7 @@ namespace GoldTracker.Infrastructure.Alerts;
 
 public sealed class TelegramNotifier : ITelegramNotifier
 {
-  private readonly TelegramBotClient _botClient;
+  private readonly TelegramBotClient? _botClient;
   private readonly TelegramOptions _options;
   private readonly ILogger<TelegramNotifier> _logger;
 
@@ -20,11 +20,26 @@ public sealed class TelegramNotifier : ITelegramNotifier
   {
     _options = options.Value;
     _logger = logger;
-    _botClient = new TelegramBotClient(_options.BotToken);
+
+    if (IsConfigured(_options))
+    {
+      _botClient = new TelegramBotClient(_options.BotToken);
+    }
+    else
+    {
+      _logger.LogDebug("Telegram notifier disabled: missing token or chat id");
+      _botClient = null;
+    }
   }
 
   public async Task SendTextAsync(string chatId, string text, CancellationToken ct = default)
   {
+    if (!IsConfigured(_options) || _botClient is null || string.IsNullOrWhiteSpace(chatId) || chatId == "__FROM_ENV__")
+    {
+      _logger.LogDebug("Skipping Telegram message; notifier not configured");
+      return;
+    }
+
     try
     {
       await _botClient.SendMessage(
@@ -38,12 +53,17 @@ public sealed class TelegramNotifier : ITelegramNotifier
     catch (Exception ex)
     {
       _logger.LogError(ex, "Failed to send Telegram message to {ChatId}", chatId);
-      throw;
     }
   }
 
   public async Task SendPhotoAsync(string chatId, byte[] photoBytes, string? caption, CancellationToken ct = default)
   {
+    if (!IsConfigured(_options) || _botClient is null || string.IsNullOrWhiteSpace(chatId) || chatId == "__FROM_ENV__")
+    {
+      _logger.LogDebug("Skipping Telegram photo; notifier not configured");
+      return;
+    }
+
     try
     {
       using var stream = new MemoryStream(photoBytes);
@@ -60,8 +80,14 @@ public sealed class TelegramNotifier : ITelegramNotifier
     catch (Exception ex)
     {
       _logger.LogError(ex, "Failed to send Telegram photo to {ChatId}", chatId);
-      throw;
     }
   }
+
+  private static bool IsConfigured(TelegramOptions options) =>
+    options.Enabled &&
+    !string.IsNullOrWhiteSpace(options.BotToken) &&
+    options.BotToken != "__FROM_ENV__" &&
+    !string.IsNullOrWhiteSpace(options.DefaultChatId) &&
+    options.DefaultChatId != "__FROM_ENV__";
 }
 

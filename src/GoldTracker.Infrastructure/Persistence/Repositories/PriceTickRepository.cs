@@ -1,3 +1,4 @@
+using Npgsql;
 using Dapper;
 using GoldTracker.Application.Contracts.Repositories;
 using GoldTracker.Domain.Enums;
@@ -19,27 +20,34 @@ public sealed class PriceTickRepository : IPriceTickRepository
   {
     await using var conn = _factory.CreateConnection();
     await conn.OpenAsync(ct);
-    await conn.ExecuteAsync(
-      @"INSERT INTO gold.price_tick (product_id, source_id, price_buy, price_sell, currency, collected_at, effective_at, raw_hash)
-        VALUES (@ProductId, @SourceId, @PriceBuy, @PriceSell, @Currency, @CollectedAt, @EffectiveAt, @RawHash)
-        ON CONFLICT (product_id, source_id, effective_at)
-        DO UPDATE SET
-          price_buy = EXCLUDED.price_buy,
-          price_sell = EXCLUDED.price_sell,
-          currency = EXCLUDED.currency,
-          collected_at = EXCLUDED.collected_at,
-          raw_hash = EXCLUDED.raw_hash",
-      new
-      {
-        tick.ProductId,
-        tick.SourceId,
-        tick.PriceBuy,
-        tick.PriceSell,
-        tick.Currency,
-        tick.CollectedAt,
-        tick.EffectiveAt,
-        tick.RawHash
-      });
+    try
+    {
+      await conn.ExecuteAsync(
+        @"INSERT INTO gold.price_tick (product_id, source_id, price_buy, price_sell, currency, collected_at, effective_at, raw_hash)
+          VALUES (@ProductId, @SourceId, @PriceBuy, @PriceSell, @Currency, @CollectedAt, @EffectiveAt, @RawHash)
+          ON CONFLICT (product_id, source_id, effective_at)
+          DO UPDATE SET
+            price_buy = EXCLUDED.price_buy,
+            price_sell = EXCLUDED.price_sell,
+            currency = EXCLUDED.currency,
+            collected_at = EXCLUDED.collected_at,
+            raw_hash = EXCLUDED.raw_hash",
+        new
+        {
+          tick.ProductId,
+          tick.SourceId,
+          tick.PriceBuy,
+          tick.PriceSell,
+          tick.Currency,
+          tick.CollectedAt,
+          tick.EffectiveAt,
+          tick.RawHash
+        });
+    }
+    catch (PostgresException ex) when (ex.SqlState == "23505" && ex.ConstraintName == "idx_price_tick_raw_hash")
+    {
+      _ = ex; // Ignore duplicate raw hash
+    }
   }
 
   public async Task<IReadOnlyList<CanonicalPriceTick>> GetLatestAsync(string? kind, string? brand, string? region, CancellationToken ct = default)
@@ -326,8 +334,12 @@ public sealed class PriceTickRepository : IPriceTickRepository
 
     sql += " ORDER BY v.date DESC";
 
-    var results = await conn.QueryAsync<(DateOnly, decimal, decimal, string)>(sql, parameters);
-    return results.ToList();
+    var rows = await conn.QueryAsync<DayOverDayRow>(sql, parameters);
+    return rows
+      .Select(r => (DateOnly.FromDateTime(r.Date), r.PriceSellClose, r.DeltaVsYesterday, r.Direction))
+      .ToList();
   }
+
+  private sealed record DayOverDayRow(DateTime Date, decimal PriceSellClose, decimal DeltaVsYesterday, string Direction);
 }
 

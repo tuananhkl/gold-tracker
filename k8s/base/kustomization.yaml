@@ -17,4 +17,5 @@ resources:
   - cron-scrape-phucthanh.yaml
   - cron-snapshot-daily.yaml
   - configmap-app.yaml
+  - telegram-secret.yaml
 
