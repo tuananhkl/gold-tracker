@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cron-scrape-sjc
+spec:
+  schedule: "*/10 * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: curl
+              image: curlimages/curl:8.10.1
+              args:
+                - -sSf
+                - -X
+                - POST
+                - http://gold-tracker-api.gold-dev.svc.cluster.local:8080/admin/scrape/sjc?mode=once
+              envFrom:
+                - configMapRef: { name: gold-app-config }
+

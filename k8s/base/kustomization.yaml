@@ -12,6 +12,9 @@ resources:
   - ui-service.yaml
   - flyway-job.yaml
   - cron-scrape-doji.yaml
+  - cron-scrape-btmc.yaml
+  - cron-scrape-sjc.yaml
+  - cron-scrape-phucthanh.yaml
   - cron-snapshot-daily.yaml
   - configmap-app.yaml
 
