@@ -149,17 +149,18 @@ export default function GoldPricePage() {
         <Card>
           <CardContent className="pt-6">
             <div className="text-sm font-semibold text-orange-500 mb-4">GIÁ VÀNG</div>
-            <div className="space-y-3">
+            <div className="space-y-4">
               {topSummaries.map((row) => (
-                <div key={row.label} className="flex justify-between text-xs">
-                  <div className="flex gap-8">
+                <div key={row.label} className="space-y-2">
+                  <div className="text-base font-semibold text-gray-800">{row.label}</div>
+                  <div className="flex gap-8 pl-2">
                     <div>
-                      <div className="text-gray-600">{row.label} Mua</div>
-                      <div className="font-semibold text-base">{formatNumber(row.buyToday)}</div>
+                      <div className="text-gray-600 text-sm mb-1">Mua</div>
+                      <div className="font-semibold text-lg text-blue-600">{formatNumber(row.buyToday)}</div>
                     </div>
                     <div>
-                      <div className="text-gray-600">Bán</div>
-                      <div className="font-semibold text-base">{formatNumber(row.sellToday)}</div>
+                      <div className="text-gray-600 text-sm mb-1">Bán</div>
+                      <div className="font-semibold text-lg text-green-600">{formatNumber(row.sellToday)}</div>
                     </div>
                   </div>
                 </div>
