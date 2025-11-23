@@ -137,11 +137,18 @@ public static class ServiceCollectionExtensions
     {
       var options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<GoldTracker.Infrastructure.Scrapers.PhucThanh.PhucThanhOptions>>().Value;
       client.Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds);
-      client.DefaultRequestHeaders.Add("User-Agent", "GoldTracker/1.0");
+      // Use browser-like User-Agent to avoid 403 Forbidden
+      client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
+      client.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+      client.DefaultRequestHeaders.Add("Accept-Language", "vi-VN,vi;q=0.9,en-US;q=0.8,en;q=0.7");
     });
 
     services.AddSingleton<ScraperHealthTracker>();
-    services.AddSingleton<GoldTracker.Infrastructure.Scrapers.PhucThanh.PhucThanhParser>();
+    services.AddSingleton<GoldTracker.Infrastructure.Scrapers.PhucThanh.PhucThanhParser>(sp =>
+    {
+      var logger = sp.GetService<Microsoft.Extensions.Logging.ILogger<GoldTracker.Infrastructure.Scrapers.PhucThanh.PhucThanhParser>>();
+      return new GoldTracker.Infrastructure.Scrapers.PhucThanh.PhucThanhParser(logger);
+    });
     services.AddScoped<GoldTracker.Infrastructure.Scrapers.PhucThanh.IPhucThanhScraper, GoldTracker.Infrastructure.Scrapers.PhucThanh.PhucThanhScraper>();
     return services;
   }

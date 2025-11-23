@@ -50,9 +50,16 @@ public sealed class PhucThanhScraper : IPhucThanhScraper
       var records = _parser.Parse(html);
       if (records.Count == 0)
       {
-        const string msg = "No PhucThanh price rows parsed";
-        _logger.LogWarning(msg);
-        _health.RecordFailure(msg);
+        // Log more details for debugging
+        var hasBangTyGia = html.Contains("BẢNG TỶ GIÁ", StringComparison.OrdinalIgnoreCase) || 
+                          html.Contains("BANG TY GIA", StringComparison.OrdinalIgnoreCase);
+        var hasNhanTron = html.Contains("Nhẫn", StringComparison.OrdinalIgnoreCase) && 
+                         html.Contains("tròn", StringComparison.OrdinalIgnoreCase);
+        var htmlLength = html.Length;
+        var htmlSample = html.Length > 1000 ? html.Substring(0, 1000) : html;
+        _logger.LogWarning("No PhucThanh price rows parsed. HTML length: {Length}, Has BẢNG TỶ GIÁ: {HasBang}, Has Nhẫn tròn: {HasNhan}, Sample: {Sample}", 
+          htmlLength, hasBangTyGia, hasNhanTron, htmlSample);
+        _health.RecordFailure("No PhucThanh price rows parsed");
         return 0;
       }
 

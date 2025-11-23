@@ -19,7 +19,7 @@ spec:
                 - -sSf
                 - -X
                 - POST
-                - http://gold-tracker-api.gold-dev.svc.cluster.local:8080/admin/scrape/phucthanh?mode=once
+                - http://gold-tracker-api:8080/admin/scrape/phucthanh?mode=once
               envFrom:
                 - configMapRef: { name: gold-app-config }
 
