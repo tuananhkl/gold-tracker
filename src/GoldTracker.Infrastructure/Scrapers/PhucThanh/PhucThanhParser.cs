@@ -74,10 +74,12 @@ public sealed class PhucThanhParser
       var now = DateTimeOffset.UtcNow;
       foreach (var (form, karat, priceBuy, priceSell) in tableRecords)
       {
-        // Site unit: prices are per "chỉ" (1 chỉ = 1/10 cây)
-        // Convert to VND per cây (10 chỉ)
-        var buyVnd = priceBuy * 1000m * 10m;
-        var sellVnd = priceSell * 1000m * 10m;
+        // Site unit: prices are per "chỉ" in thousand VND (e.g., 14.150 = 14,150 thousand VND/chỉ)
+        // Convert to match UI display format: UI divides by 100, so we need to store value that when divided by 100 gives 141.500
+        // To display 141.500 in UI: store 14,150,000 VND → UI: 14,150,000 / 100 = 141,500
+        // Formula: 14.150 (thousand VND/chỉ) * 10 (chỉ/lượng) * 100 (to match UI divisor) = 14,150,000 VND
+        var buyVnd = priceBuy * 10m * 100m;  // 14.150 * 10 * 100 = 14,150,000
+        var sellVnd = priceSell * 10m * 100m; // 14.350 * 10 * 100 = 14,350,000
 
         results.Add(new RawPriceRecord
         {

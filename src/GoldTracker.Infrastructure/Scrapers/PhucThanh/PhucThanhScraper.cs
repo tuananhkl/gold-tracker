@@ -129,7 +129,13 @@ public sealed class PhucThanhScraper : IPhucThanhScraper
     if (r.PriceBuy is null || r.PriceSell is null) { reason = "missing price"; return true; }
     if (r.PriceBuy <= 0 || r.PriceSell <= 0) { reason = "non-positive price"; return true; }
     if (r.PriceSell < r.PriceBuy) { reason = "sell < buy"; return true; }
-    if (r.PriceBuy < _options.MinPrice || r.PriceBuy > _options.MaxPrice) { reason = "price out of bounds"; return true; }
+    if (r.PriceBuy < _options.MinPrice || r.PriceBuy > _options.MaxPrice)
+    {
+      _logger.LogWarning("Price out of bounds: {PriceBuy} (Min: {MinPrice}, Max: {MaxPrice})", 
+        r.PriceBuy, _options.MinPrice, _options.MaxPrice);
+      reason = "price out of bounds"; 
+      return true;
+    }
     var ratio = (r.PriceSell.Value - r.PriceBuy.Value) / r.PriceBuy.Value;
     if (ratio > _options.MaxSpreadRatio) { reason = $"spread {ratio:P} too high"; return true; }
     return false;
