@@ -126,39 +126,13 @@ export default function GoldPricePage() {
   const topSummaries = useMemo(() => {
     if (tableData.length === 0) return []
 
-    const prioritizedLabels = ["SJC", "PNJ", "DOJI HN"]
-    const hasData = tableData.filter((row) => row.buyToday !== null && row.sellToday !== null)
-    const noData = tableData.filter((row) => row.buyToday === null || row.sellToday === null)
-
-    const ordered: PriceData[] = []
-
-    for (const label of prioritizedLabels) {
-      const match = hasData.find((row) => row.label === label)
-      if (match && !ordered.includes(match)) {
-        ordered.push(match)
-      }
+    // Only show PhucThanh in the widget
+    const phucThanhRow = tableData.find((row) => row.label === "PHÚC THÀNH")
+    if (phucThanhRow && phucThanhRow.buyToday !== null && phucThanhRow.sellToday !== null) {
+      return [phucThanhRow]
     }
-
-    for (const row of hasData) {
-      if (!ordered.includes(row)) {
-        ordered.push(row)
-      }
-    }
-
-    for (const label of prioritizedLabels) {
-      const match = noData.find((row) => row.label === label)
-      if (match && !ordered.includes(match)) {
-        ordered.push(match)
-      }
-    }
-
-    for (const row of noData) {
-      if (!ordered.includes(row)) {
-        ordered.push(row)
-      }
-    }
-
-    return ordered.slice(0, 2)
+    
+    return []
   }, [tableData])
 
   if (error) {
