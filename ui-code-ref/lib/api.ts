@@ -115,6 +115,7 @@ const fetchHistoryPoints = async (
   brand: string,
   region: string | null,
   days: number,
+  selectedDate?: string,
 ): Promise<HistoryPoint[]> => {
   const url = new URL("/api/prices/history", API_BASE_URL)
   url.searchParams.set("kind", "ring")
@@ -131,12 +132,27 @@ const fetchHistoryPoints = async (
 
   const payload = (await response.json()) as Partial<HistoryResponse>
   const points = payload.points ?? []
-  return points.sort((a, b) => (a.date > b.date ? 1 : -1))
+  let sorted = points.sort((a, b) => (a.date > b.date ? 1 : -1))
+  
+  // If selectedDate is provided, filter to get data for that date and previous day
+  if (selectedDate) {
+    const [day, month, year] = selectedDate.split("/")
+    const targetDate = `${year}-${month}-${day}`
+    const targetDateObj = new Date(targetDate)
+    const prevDateObj = new Date(targetDateObj)
+    prevDateObj.setDate(prevDateObj.getDate() - 1)
+    const prevDate = prevDateObj.toISOString().split("T")[0]
+    
+    sorted = sorted.filter(p => p.date === targetDate || p.date === prevDate)
+  }
+  
+  return sorted
 }
 
 const buildRowFromItem = async (
   label: string,
   item: LatestPriceItem | undefined,
+  selectedDate?: string,
 ): Promise<PriceTableRow> => {
   if (!item) {
     return {
@@ -146,6 +162,85 @@ const buildRowFromItem = async (
     }
   }
 
+  // If selectedDate is provided, fetch data for that specific date
+  if (selectedDate) {
+    const [day, month, year] = selectedDate.split("/")
+    const dateStr = `${year}-${month}-${day}`
+    
+    // Fetch data for selected date
+    const url = new URL("/api/prices/by-date", API_BASE_URL)
+    url.searchParams.set("date", dateStr)
+    url.searchParams.set("kind", "ring")
+    url.searchParams.set("brand", item.brand)
+    if (item.region) {
+      url.searchParams.set("region", item.region)
+    }
+    
+    const response = await fetch(url.toString(), { cache: "no-store" })
+    let buyToday: number | null = null
+    let sellToday: number | null = null
+    
+    if (response.ok) {
+      const data = await response.json() as { items: LatestPriceItem[] }
+      // Get the last item for that day (most recent tick)
+      const selectedDateItems = data.items.filter(i => 
+        i.brand === item.brand && 
+        (item.region ? i.region === item.region : true)
+      )
+      if (selectedDateItems.length > 0) {
+        const selectedDateItem = selectedDateItems[selectedDateItems.length - 1]
+        buyToday = convertPrice(selectedDateItem.priceBuy)
+        sellToday = convertPrice(selectedDateItem.priceSell)
+      }
+    }
+    
+    // Get previous day data
+    const prevDate = new Date(dateStr)
+    prevDate.setDate(prevDate.getDate() - 1)
+    const prevDateStr = prevDate.toISOString().split("T")[0]
+    
+    const prevUrl = new URL("/api/prices/by-date", API_BASE_URL)
+    prevUrl.searchParams.set("date", prevDateStr)
+    prevUrl.searchParams.set("kind", "ring")
+    prevUrl.searchParams.set("brand", item.brand)
+    if (item.region) {
+      prevUrl.searchParams.set("region", item.region)
+    }
+    
+    const prevResponse = await fetch(prevUrl.toString(), { cache: "no-store" })
+    let buyYesterday: number | null = null
+    let sellYesterday: number | null = null
+    
+    if (prevResponse.ok) {
+      const prevData = await prevResponse.json() as { items: LatestPriceItem[] }
+      const prevItems = prevData.items.filter(i => 
+        i.brand === item.brand && 
+        (item.region ? i.region === item.region : true)
+      )
+      if (prevItems.length > 0) {
+        const prevItem = prevItems[prevItems.length - 1]
+        buyYesterday = convertPrice(prevItem.priceBuy)
+        sellYesterday = convertPrice(prevItem.priceSell)
+      }
+    }
+    
+    const buyChange = buyToday !== null && buyYesterday !== null ? buyToday - buyYesterday : null
+    const sellChange = sellToday !== null && sellYesterday !== null ? sellToday - sellYesterday : null
+    
+    return {
+      label,
+      brand: item.brand,
+      region: item.region,
+      buyToday,
+      sellToday,
+      buyYesterday,
+      sellYesterday,
+      buyChange,
+      sellChange,
+    }
+  }
+
+  // Fallback to latest data
   const buyToday = convertPrice(item.priceBuy)
   const sellToday = convertPrice(item.priceSell)
 
@@ -176,7 +271,7 @@ const buildRowFromItem = async (
   }
 }
 
-export const getLatestTableRows = async (): Promise<PriceTableRow[]> => {
+export const getLatestTableRows = async (selectedDate?: string): Promise<PriceTableRow[]> => {
   const latestItems = await fetchLatestItems()
   const unused = [...latestItems]
 
@@ -186,7 +281,7 @@ export const getLatestTableRows = async (): Promise<PriceTableRow[]> => {
       config.matchers.some((matcher) => matcher(item)),
     )
     const matchedItem = index >= 0 ? unused.splice(index, 1)[0] : undefined
-    rows.push(await buildRowFromItem(config.label, matchedItem))
+    rows.push(await buildRowFromItem(config.label, matchedItem, selectedDate))
   }
 
   return rows

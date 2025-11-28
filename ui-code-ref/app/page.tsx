@@ -57,12 +57,18 @@ const getCurrentDate = () => {
   return `${day}/${month}/${year}`
 }
 
-const getYesterdayDate = () => {
-  const yesterday = new Date()
-  yesterday.setDate(yesterday.getDate() - 1)
-  const day = String(yesterday.getDate()).padStart(2, "0")
-  const month = String(yesterday.getMonth() + 1).padStart(2, "0")
-  const year = yesterday.getFullYear()
+const getYesterdayDate = (fromDate?: string) => {
+  let date: Date
+  if (fromDate) {
+    const [day, month, year] = fromDate.split("/")
+    date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+  } else {
+    date = new Date()
+  }
+  date.setDate(date.getDate() - 1)
+  const day = String(date.getDate()).padStart(2, "0")
+  const month = String(date.getMonth() + 1).padStart(2, "0")
+  const year = date.getFullYear()
   return `${day}/${month}/${year}`
 }
 
@@ -85,9 +91,19 @@ export default function GoldPricePage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    setSelectedDate(getCurrentDate())
+  }, [])
+
+  useEffect(() => {
     const load = async () => {
       try {
-        const tableRes = await fetch("/api/prices/latest-table")
+        setLoading(true)
+        const dateParam = selectedDate ? selectedDate.split("/").reverse().join("-") : undefined
+        const url = dateParam 
+          ? `/api/prices/table-by-date?date=${dateParam}`
+          : "/api/prices/latest-table"
+        
+        const tableRes = await fetch(url)
         if (!tableRes.ok) {
           throw new Error(`Failed to load table data (${tableRes.status})`)
         }
@@ -119,9 +135,10 @@ export default function GoldPricePage() {
       }
     }
 
-    load()
-    setSelectedDate(getCurrentDate())
-  }, [])
+    if (selectedDate) {
+      load()
+    }
+  }, [selectedDate])
 
   const topSummaries = useMemo(() => {
     if (tableData.length === 0) return []
@@ -203,10 +220,10 @@ export default function GoldPricePage() {
               <tr className="bg-gray-200 border-b">
                 <th className="px-4 py-3 text-left font-semibold w-24">Cửa hàng</th>
                 <th colSpan={2} className="px-4 py-3 text-center font-semibold">
-                  Hôm nay ({getCurrentDate()})
+                  Hôm nay ({selectedDate || getCurrentDate()})
                 </th>
                 <th colSpan={2} className="px-4 py-3 text-center font-semibold">
-                  Hôm qua ({getYesterdayDate()})
+                  Hôm qua ({getYesterdayDate(selectedDate)})
                 </th>
               </tr>
               <tr className="bg-gray-100 border-b">

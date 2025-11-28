@@ -79,6 +79,13 @@ spec:
                 name: gold-tracker-ui
                 port:
                   number: 80
+          - path: /api/prices/table-by-date
+            pathType: Prefix
+            backend:
+              service:
+                name: gold-tracker-ui
+                port:
+                  number: 80
           # Also support /gold/api/prices/latest-table for consistency
           - path: /gold/api/prices/latest-table
             pathType: Exact
@@ -88,6 +95,13 @@ spec:
                 port:
                   number: 80
           - path: /gold/api/prices/history-30d
+            pathType: Prefix
+            backend:
+              service:
+                name: gold-tracker-ui
+                port:
+                  number: 80
+          - path: /gold/api/prices/table-by-date
             pathType: Prefix
             backend:
               service:
