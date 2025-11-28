@@ -154,8 +154,36 @@ public sealed class PriceV1ReadService : IPriceV1Query
     if (product is null)
       throw new InvalidOperationException($"Cannot resolve product for kind={kind}, brand={brand}, region={region}");
 
-    // Get source (prefer DOJI, otherwise first available)
-    source = await _sourceRepo.GetByNameAsync("DOJI", ct);
+    // Get source: try multiple variants to match brand to source name
+    // For PhucThanh, source name is "PHUC_THANH" (from parser)
+    if (product.Brand.Contains("Phuc", StringComparison.OrdinalIgnoreCase))
+    {
+      // 1. Try "PHUC_THANH" first (actual source name from parser)
+      source = await _sourceRepo.GetByNameAsync("PHUC_THANH", ct);
+      // 2. Try "PhucThanh" (brand name)
+      if (source is null)
+      {
+        source = await _sourceRepo.GetByNameAsync("PhucThanh", ct);
+      }
+    }
+    else
+    {
+      // For other brands, try brand name first
+      source = await _sourceRepo.GetByNameAsync(product.Brand, ct);
+      // Try uppercase
+      if (source is null)
+      {
+        source = await _sourceRepo.GetByNameAsync(product.Brand.ToUpperInvariant(), ct);
+      }
+    }
+    
+    // 3. Backwards compatible fallback: DOJI as default source
+    if (source is null)
+    {
+      source = await _sourceRepo.GetByNameAsync("DOJI", ct);
+    }
+    
+    // 4. Last resort: any source
     if (source is null)
     {
       using var conn = _connectionFactory.CreateConnection();
@@ -187,11 +215,12 @@ public sealed class PriceV1ReadService : IPriceV1Query
       fromDate = toDate.AddDays(-29);
     }
 
-    // Get history from daily_snapshot
+    // Get history from daily_snapshot, fallback to price_tick if no snapshot data
     using var conn2 = _connectionFactory.CreateConnection();
     if (conn2 is System.Data.IDbConnection dbConn2)
       await Task.Run(() => dbConn2.Open(), ct);
 
+    // First try daily_snapshot
     var historySql = @"
       SELECT
         ds.date as Date,
@@ -212,6 +241,29 @@ public sealed class PriceV1ReadService : IPriceV1Query
     historyParams.Add("toDate", toDate.ToDateTime(TimeOnly.MinValue));
 
     var history = await Dapper.SqlMapper.QueryAsync<(DateTime DateUtc, decimal PriceBuyClose, decimal PriceSellClose)>(conn2, historySql, historyParams);
+
+    // If no snapshot data, fallback to price_tick (last tick per day)
+    if (!history.Any())
+    {
+      var fallbackSql = @"
+        WITH daily_last_ticks AS (
+          SELECT DISTINCT ON (gold.fn_local_date(pt.effective_at))
+            gold.fn_local_date(pt.effective_at) as Date,
+            pt.price_buy as PriceBuyClose,
+            pt.price_sell as PriceSellClose
+          FROM gold.price_tick pt
+          WHERE pt.product_id = @productId
+            AND pt.source_id = @sourceId
+            AND gold.fn_local_date(pt.effective_at) >= @fromDate
+            AND gold.fn_local_date(pt.effective_at) <= @toDate
+          ORDER BY gold.fn_local_date(pt.effective_at), pt.effective_at DESC, pt.collected_at DESC, pt.id DESC
+        )
+        SELECT Date::timestamp as DateUtc, PriceBuyClose, PriceSellClose
+        FROM daily_last_ticks
+        ORDER BY Date ASC";
+      
+      history = await Dapper.SqlMapper.QueryAsync<(DateTime DateUtc, decimal PriceBuyClose, decimal PriceSellClose)>(conn2, fallbackSql, historyParams);
+    }
 
     var points = history.Select(h => new PriceHistoryPointDto(
       DateOnly.FromDateTime(h.DateUtc),
