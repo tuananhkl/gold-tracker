@@ -104,51 +104,44 @@ public sealed class PriceV1ReadService : IPriceV1Query
     var brand = query.Brand?.Trim();
     var region = query.Region?.Trim();
 
-    // Resolve product: if filters narrow to 1 product, use it; otherwise default to ring + DOJI + first matching
+    // Resolve product: if filters narrow to 1 product, use it; otherwise query directly
     Product? product = null;
     Source? source = null;
 
+    var formEnum = Enum.TryParse<GoldForm>(kind, true, out var f) ? f : GoldForm.Ring;
+    
     if (!string.IsNullOrWhiteSpace(brand) && !string.IsNullOrWhiteSpace(region))
     {
-      // Try to find specific product
-      var formEnum = Enum.TryParse<GoldForm>(kind, true, out var f) ? f : GoldForm.Ring;
+      // Try to find specific product first
       product = await _productRepo.FindAsync(brand, formEnum, null, region, ct);
     }
 
-    // If not found, default to ring + DOJI + first matching
+    // If not found, query directly from database (don't fallback to DOJI)
     if (product is null)
     {
-      var formEnum = Enum.TryParse<GoldForm>(kind, true, out var f) ? f : GoldForm.Ring;
-      product = await _productRepo.FindAsync("DOJI", formEnum, 24, "Hanoi", ct);
+      using var conn = _connectionFactory.CreateConnection();
+      if (conn is System.Data.IDbConnection dbConn)
+        await Task.Run(() => dbConn.Open(), ct);
+      var sql = @"
+        SELECT id, brand, form, karat, region, sku_hint as SkuHint, active
+        FROM gold.product
+        WHERE form = @form::text";
+      var parameters = new Dapper.DynamicParameters();
+      parameters.Add("form", kind);
       
-      // If still not found, try to find any ring product
-      if (product is null)
+      if (!string.IsNullOrWhiteSpace(brand))
       {
-        // Query for first matching product
-        using var conn = _connectionFactory.CreateConnection();
-        if (conn is System.Data.IDbConnection dbConn)
-          await Task.Run(() => dbConn.Open(), ct);
-        var sql = @"
-          SELECT id, brand, form, karat, region, sku_hint as SkuHint, active
-          FROM gold.product
-          WHERE form = @form::text";
-        var parameters = new Dapper.DynamicParameters();
-        parameters.Add("form", kind);
-        
-        if (!string.IsNullOrWhiteSpace(brand))
-        {
-          sql += " AND brand = @brand";
-          parameters.Add("brand", brand);
-        }
-        if (!string.IsNullOrWhiteSpace(region))
-        {
-          sql += " AND region = @region";
-          parameters.Add("region", region);
-        }
-        
-        sql += " ORDER BY brand, karat NULLS LAST, region NULLS LAST LIMIT 1";
-        product = await Dapper.SqlMapper.QueryFirstOrDefaultAsync<Product>(conn, sql, parameters) ?? null;
+        sql += " AND brand = @brand";
+        parameters.Add("brand", brand);
       }
+      if (!string.IsNullOrWhiteSpace(region))
+      {
+        sql += " AND region = @region";
+        parameters.Add("region", region);
+      }
+      
+      sql += " ORDER BY brand, karat NULLS LAST, region NULLS LAST LIMIT 1";
+      product = await Dapper.SqlMapper.QueryFirstOrDefaultAsync<Product>(conn, sql, parameters) ?? null;
     }
 
     if (product is null)
@@ -160,10 +153,20 @@ public sealed class PriceV1ReadService : IPriceV1Query
     {
       // 1. Try "PHUC_THANH" first (actual source name from parser)
       source = await _sourceRepo.GetByNameAsync("PHUC_THANH", ct);
-      // 2. Try "PhucThanh" (brand name)
+      // 2. Try "PhucThanh" (brand name) - unlikely but try anyway
       if (source is null)
       {
         source = await _sourceRepo.GetByNameAsync("PhucThanh", ct);
+      }
+      // 3. Try "PHUCTHANH" (uppercase, no underscore)
+      if (source is null)
+      {
+        source = await _sourceRepo.GetByNameAsync("PHUCTHANH", ct);
+      }
+      // For PhucThanh, DO NOT fallback to DOJI - throw error if source not found
+      if (source is null)
+      {
+        throw new InvalidOperationException($"Source not found for PhucThanh brand. Expected 'PHUC_THANH' but not found in database.");
       }
     }
     else
@@ -175,16 +178,15 @@ public sealed class PriceV1ReadService : IPriceV1Query
       {
         source = await _sourceRepo.GetByNameAsync(product.Brand.ToUpperInvariant(), ct);
       }
+      // Backwards compatible fallback: DOJI as default source (only for non-PhucThanh)
+      if (source is null)
+      {
+        source = await _sourceRepo.GetByNameAsync("DOJI", ct);
+      }
     }
     
-    // 3. Backwards compatible fallback: DOJI as default source
-    if (source is null)
-    {
-      source = await _sourceRepo.GetByNameAsync("DOJI", ct);
-    }
-    
-    // 4. Last resort: any source
-    if (source is null)
+    // Last resort: any source (only if still null and not PhucThanh)
+    if (source is null && !product.Brand.Contains("Phuc", StringComparison.OrdinalIgnoreCase))
     {
       using var conn = _connectionFactory.CreateConnection();
       if (conn is System.Data.IDbConnection dbConn)
