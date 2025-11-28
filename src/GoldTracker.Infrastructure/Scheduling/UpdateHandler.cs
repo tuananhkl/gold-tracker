@@ -116,7 +116,7 @@ Ví dụ:
 
   private async Task HandleRingCommand(ITelegramBotClient botClient, Message message, IPriceTickRepository priceRepo, CancellationToken ct)
   {
-    var brands = new[] { "SJC", "DOJI", "BTMC" };
+    var brands = new[] { "SJC", "DOJI", "BTMC", "PhucThanh" };
     var text = "*Giá Nhẫn Vàng Hôm Nay*\n\n";
 
     foreach (var brand in brands)
@@ -148,7 +148,7 @@ Ví dụ:
 
   private async Task HandleBarCommand(ITelegramBotClient botClient, Message message, IPriceTickRepository priceRepo, CancellationToken ct)
   {
-    var brands = new[] { "SJC", "DOJI", "BTMC" };
+    var brands = new[] { "SJC", "DOJI", "BTMC", "PhucThanh" };
     var text = "*Giá Vàng Miếng Hôm Nay*\n\n";
 
     foreach (var brand in brands)

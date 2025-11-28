@@ -88,7 +88,7 @@ public sealed class DailyBriefService : BackgroundService
 
     try
     {
-      var brands = _options.BrandFilter.Count > 0 ? _options.BrandFilter.ToArray() : new[] { "DOJI", "SJC", "BTMC" };
+      var brands = _options.BrandFilter.Count > 0 ? _options.BrandFilter.ToArray() : new[] { "DOJI", "SJC", "BTMC", "PhucThanh" };
       var message = "📊 *Daily Brief - Giá Vàng 24h*\n\n";
 
       foreach (var brand in brands)
