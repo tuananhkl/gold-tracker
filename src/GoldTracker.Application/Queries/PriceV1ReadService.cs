@@ -244,8 +244,9 @@ public sealed class PriceV1ReadService : IPriceV1Query
 
     var history = await Dapper.SqlMapper.QueryAsync<(DateTime DateUtc, decimal PriceBuyClose, decimal PriceSellClose)>(conn2, historySql, historyParams);
 
-    // If no snapshot data, fallback to price_tick (last tick per day)
-    if (!history.Any())
+    // If no snapshot data or insufficient data, fallback to price_tick (last tick per day)
+    // Use fallback if we have less than 5 days of snapshot data
+    if (history.Count() < 5)
     {
       var fallbackSql = @"
         WITH daily_last_ticks AS (
@@ -264,7 +265,12 @@ public sealed class PriceV1ReadService : IPriceV1Query
         FROM daily_last_ticks
         ORDER BY Date ASC";
       
-      history = await Dapper.SqlMapper.QueryAsync<(DateTime DateUtc, decimal PriceBuyClose, decimal PriceSellClose)>(conn2, fallbackSql, historyParams);
+      var fallbackHistory = await Dapper.SqlMapper.QueryAsync<(DateTime DateUtc, decimal PriceBuyClose, decimal PriceSellClose)>(conn2, fallbackSql, historyParams);
+      // Use fallback if it has more data than snapshot
+      if (fallbackHistory.Count() > history.Count())
+      {
+        history = fallbackHistory;
+      }
     }
 
     var points = history.Select(h => new PriceHistoryPointDto(
