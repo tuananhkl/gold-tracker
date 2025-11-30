@@ -90,26 +90,23 @@ export default function GoldPricePage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  // Initialize selectedDate and load initial data (table + chart) only once
   useEffect(() => {
-    setSelectedDate(getCurrentDate())
-  }, [])
+    const initialDate = getCurrentDate()
+    setSelectedDate(initialDate)
 
-  useEffect(() => {
-    const load = async () => {
+    const loadInitial = async () => {
       try {
         setLoading(true)
-        const dateParam = selectedDate ? selectedDate.split("/").reverse().join("-") : undefined
-        const url = dateParam 
-          ? `/api/prices/table-by-date?date=${dateParam}`
-          : "/api/prices/latest-table"
-        
-        const tableRes = await fetch(url)
+        // Load initial table data (latest)
+        const tableRes = await fetch("/api/prices/latest-table")
         if (!tableRes.ok) {
           throw new Error(`Failed to load table data (${tableRes.status})`)
         }
         const table = (await tableRes.json()) as PriceData[]
         setTableData(table)
 
+        // Load chart data (only once, based on first row)
         const defaultRow = table.find((row) => row.brand && row.buyToday !== null) ?? table.find((row) => row.brand)
         if (defaultRow?.brand) {
           const params = new URLSearchParams({ brand: defaultRow.brand })
@@ -128,16 +125,38 @@ export default function GoldPricePage() {
           setChartMeta(null)
         }
       } catch (error) {
-        console.error("Failed to fetch dashboard data", error)
+        console.error("Failed to fetch initial dashboard data", error)
         setError("Lỗi khi tải dữ liệu")
       } finally {
         setLoading(false)
       }
     }
 
-    if (selectedDate) {
-      load()
+    loadInitial()
+  }, [])
+
+  // Reload only table data when selectedDate changes
+  useEffect(() => {
+    if (!selectedDate) return
+
+    const loadTable = async () => {
+      try {
+        const dateParam = selectedDate.split("/").reverse().join("-")
+        const url = `/api/prices/table-by-date?date=${dateParam}`
+        
+        const tableRes = await fetch(url)
+        if (!tableRes.ok) {
+          throw new Error(`Failed to load table data (${tableRes.status})`)
+        }
+        const table = (await tableRes.json()) as PriceData[]
+        setTableData(table)
+      } catch (error) {
+        console.error("Failed to fetch table data by date", error)
+        setError("Lỗi khi tải dữ liệu")
+      }
     }
+
+    loadTable()
   }, [selectedDate])
 
   const topSummaries = useMemo(() => {
