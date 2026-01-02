@@ -38,6 +38,13 @@ interface HistoryResponse {
   history: ChartData[]
 }
 
+type ChartStore = {
+  key: string
+  label: string
+  brand: string
+  region: string | null
+}
+
 const formatNumber = (value?: number | null) => {
   if (value === null || value === undefined) return "—"
   return value.toLocaleString("vi-VN")
@@ -86,9 +93,27 @@ export default function GoldPricePage() {
   const [tableData, setTableData] = useState<PriceData[]>([])
   const [chartData, setChartData] = useState<ChartData[]>([])
   const [selectedDate, setSelectedDate] = useState<string>("")
+  const [chartStores, setChartStores] = useState<ChartStore[]>([])
+  const [selectedChartStoreKey, setSelectedChartStoreKey] = useState<string>("")
   const [chartMeta, setChartMeta] = useState<{ brand: string; region?: string | null } | null>(null)
+  const [chartLoading, setChartLoading] = useState(false)
+  const [chartError, setChartError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  const buildChartStores = (table: PriceData[]): ChartStore[] => {
+    const map = new Map<string, ChartStore>()
+    for (const row of table) {
+      if (!row.brand) continue
+      const region = row.region ?? null
+      const key = `${row.brand}||${region ?? ""}`
+      const label = `${row.label}${region ? ` (${region})` : ""}`
+      if (!map.has(key)) {
+        map.set(key, { key, label, brand: row.brand, region })
+      }
+    }
+    return Array.from(map.values()).sort((a, b) => a.label.localeCompare(b.label, "vi"))
+  }
 
   // Initialize selectedDate and load initial data (table + chart) only once
   useEffect(() => {
@@ -106,23 +131,14 @@ export default function GoldPricePage() {
         const table = (await tableRes.json()) as PriceData[]
         setTableData(table)
 
-        // Load chart data (only once, based on first row)
+        const stores = buildChartStores(table)
+        setChartStores(stores)
+
+        // Pick default store for chart (first row with brand)
         const defaultRow = table.find((row) => row.brand && row.buyToday !== null) ?? table.find((row) => row.brand)
         if (defaultRow?.brand) {
-          const params = new URLSearchParams({ brand: defaultRow.brand })
-          if (defaultRow.region) {
-            params.set("region", defaultRow.region)
-          }
-          const chartRes = await fetch(`/api/prices/history-30d?${params.toString()}`)
-          if (!chartRes.ok) {
-            throw new Error(`Failed to load chart data (${chartRes.status})`)
-          }
-          const historyPayload = (await chartRes.json()) as HistoryResponse
-          setChartData(historyPayload.history ?? [])
-          setChartMeta({ brand: historyPayload.brand, region: historyPayload.region })
-        } else {
-          setChartData([])
-          setChartMeta(null)
+          const key = `${defaultRow.brand}||${defaultRow.region ?? ""}`
+          setSelectedChartStoreKey(key)
         }
       } catch (error) {
         console.error("Failed to fetch initial dashboard data", error)
@@ -134,6 +150,38 @@ export default function GoldPricePage() {
 
     loadInitial()
   }, [])
+
+  // Reload chart data only when selected store changes (NOT when selectedDate changes)
+  useEffect(() => {
+    if (!selectedChartStoreKey) return
+    const store = chartStores.find((s) => s.key === selectedChartStoreKey)
+    if (!store) return
+
+    const loadChart = async () => {
+      try {
+        setChartLoading(true)
+        setChartError(null)
+        const params = new URLSearchParams({ brand: store.brand })
+        if (store.region) {
+          params.set("region", store.region)
+        }
+        const chartRes = await fetch(`/api/prices/history-30d?${params.toString()}`)
+        if (!chartRes.ok) {
+          throw new Error(`Failed to load chart data (${chartRes.status})`)
+        }
+        const historyPayload = (await chartRes.json()) as HistoryResponse
+        setChartData(historyPayload.history ?? [])
+        setChartMeta({ brand: historyPayload.brand, region: historyPayload.region })
+      } catch (error) {
+        console.error("Failed to fetch chart data", error)
+        setChartError("Lỗi khi tải biểu đồ")
+      } finally {
+        setChartLoading(false)
+      }
+    }
+
+    loadChart()
+  }, [selectedChartStoreKey, chartStores])
 
   // Reload only table data when selectedDate changes
   useEffect(() => {
@@ -308,14 +356,38 @@ export default function GoldPricePage() {
       <div className="bg-white rounded-lg shadow-md">
         <Card>
           <CardHeader>
-            <CardTitle>Biểu đồ giá vàng 30 ngày gần nhất</CardTitle>
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <CardTitle>Biểu đồ giá vàng 30 ngày gần nhất</CardTitle>
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-medium text-gray-700">Cửa hàng:</label>
+                <select
+                  value={selectedChartStoreKey}
+                  onChange={(e) => setSelectedChartStoreKey(e.target.value)}
+                  className="px-3 py-2 border border-gray-300 rounded-md text-sm bg-white"
+                >
+                  {chartStores.length === 0 ? (
+                    <option value="">Không có dữ liệu</option>
+                  ) : (
+                    chartStores.map((store) => (
+                      <option key={store.key} value={store.key}>
+                        {store.label}
+                      </option>
+                    ))
+                  )}
+                </select>
+              </div>
+            </div>
             <CardDescription>
               Đơn vị: nghìn đồng/lượng
               {chartMeta?.brand ? ` · ${chartMeta.brand}${chartMeta.region ? ` (${chartMeta.region})` : ""}` : ""}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {chartData.length > 0 ? (
+            {chartError ? (
+              <div className="text-center py-8 text-red-500">{chartError}</div>
+            ) : chartLoading ? (
+              <div className="text-center py-8 text-gray-500">Đang tải biểu đồ...</div>
+            ) : chartData.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
