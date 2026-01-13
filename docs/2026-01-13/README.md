@@ -13,5 +13,6 @@ This folder documents the issues we hit today (UI + logging + Kubernetes), inclu
 
 - [`01-kibana-missing-log-level.md`](./01-kibana-missing-log-level.md) – Missing/incorrect log levels in Kibana
 - [`02-k8s-duplicate-environments-default-vs-gold-dev.md`](./02-k8s-duplicate-environments-default-vs-gold-dev.md) – Duplicate app deployments and cleanup
+- [`04-fix-es-tls-scraper-warnings-and-kustomize-errors.md`](./04-fix-es-tls-scraper-warnings-and-kustomize-errors.md) – ES TLS warning + scraper anomaly noise + kustomize apply failures
 - [`03-appendix-commands-cheatsheet.md`](./03-appendix-commands-cheatsheet.md) – Useful commands used in this session
 
