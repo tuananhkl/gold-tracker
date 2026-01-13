@@ -10,5 +10,10 @@ public sealed class ElasticsearchOptions
   public int TimeoutSeconds { get; set; } = 5;
   public string? Username { get; set; }
   public string? Password { get; set; }
+  /// <summary>
+  /// Dev-only escape hatch for self-signed/partial-chain Elasticsearch TLS.
+  /// When true, the HTTP client will skip server certificate validation.
+  /// </summary>
+  public bool SkipTlsVerify { get; set; } = false;
 }
 

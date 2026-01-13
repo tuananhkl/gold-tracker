@@ -166,6 +166,16 @@ public static class ServiceCollectionExtensions
         var auth = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes($"{options.Username}:{options.Password}"));
         client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", auth);
       }
+    }).ConfigurePrimaryHttpMessageHandler(sp =>
+    {
+      var options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<ElasticsearchOptions>>().Value;
+      var handler = new HttpClientHandler();
+      if (options.SkipTlsVerify)
+      {
+        handler.ServerCertificateCustomValidationCallback =
+          HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+      }
+      return handler;
     });
 
     // Alert services

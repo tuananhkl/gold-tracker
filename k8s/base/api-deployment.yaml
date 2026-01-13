@@ -4,10 +4,10 @@ metadata:
   name: gold-tracker-api
 spec:
   replicas: 1
-  selector: { matchLabels: { app: gold-api } }
+  selector: { matchLabels: { app: gold-tracker-api } }
   template:
     metadata:
-      labels: { app: gold-api }
+      labels: { app: gold-tracker-api }
     spec:
       containers:
         - name: api

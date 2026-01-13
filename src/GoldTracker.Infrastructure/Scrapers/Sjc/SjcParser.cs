@@ -66,7 +66,8 @@ public sealed class SjcParser
       });
     }
 
-    return records;
+    // We only chart/display ring + bar in the app. Excluding jewelry here prevents noisy "out of bounds" warnings.
+    return records.Where(r => !string.Equals(r.Form, "jewelry", StringComparison.OrdinalIgnoreCase)).ToArray();
   }
 
   private static string NormalizeForm(string text)

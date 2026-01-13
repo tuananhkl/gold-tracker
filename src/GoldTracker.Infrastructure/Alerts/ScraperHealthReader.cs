@@ -45,7 +45,8 @@ public sealed class ScraperHealthReader : IScraperHealthReader
             ["must"] = new object[]
             {
               new Dictionary<string, object> { ["range"] = new Dictionary<string, object> { ["@timestamp"] = new Dictionary<string, object> { ["gte"] = cutoff.ToString("O") } } },
-              new Dictionary<string, object> { ["term"] = new Dictionary<string, object> { ["log.level"] = "Error" } },
+              // ECS convention is lowercase ("error"). Keep compatibility with older docs that might have "Error".
+              new Dictionary<string, object> { ["terms"] = new Dictionary<string, object> { ["log.level"] = new[] { "error", "Error" } } },
               new Dictionary<string, object> { ["wildcard"] = new Dictionary<string, object> { ["SourceContext"] = "*Scraper*" } }
             }
           }

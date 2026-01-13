@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: gold-tracker-api
 spec:
-  selector: { app: gold-api }
+  selector: { app: gold-tracker-api }
   ports:
     - name: http
       port: 8080
