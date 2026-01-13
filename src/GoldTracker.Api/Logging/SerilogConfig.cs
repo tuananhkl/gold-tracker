@@ -1,6 +1,5 @@
 using Serilog;
 using Serilog.Events;
-using Serilog.Formatting.Compact;
 
 namespace GoldTracker.Api.Logging;
 
@@ -18,7 +17,8 @@ public static class SerilogConfig
         .MinimumLevel.Override("System", LogEventLevel.Warning)
         .Enrich.FromLogContext()
         .Enrich.With(new VietnamTimeEnricher())
-        .WriteTo.Console(new RenderedCompactJsonFormatter());
+        // Ensure '@l' (log level) is always present (including Information) to support Kibana filtering.
+        .WriteTo.Console(new AlwaysLevelRenderedCompactJsonFormatter());
     });
   }
 }
