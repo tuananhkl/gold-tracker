@@ -39,7 +39,7 @@ Chi tiết xem `11-k8s-filebeat-pipeline.md`.
 - `02-discover-workflow.md`
 - `03-kql-master.md`
 - `04-kql-vs-lucene.md`
-- `05-investigation-playbooks.md`
+- `05-practice-scenarios-20.md`
 - `06-lens-quickstart.md`
 - `07-lens-advanced-formulas-latency.md`
 - `08-dashboards-and-drilldowns.md`
